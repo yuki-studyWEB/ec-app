@@ -1,9 +1,11 @@
 const initialState = {
     products:{
-        lists:[]
+        list:[]
     },
     users: {
+        cart: [], //サブコレクション"cart""
         isSignedIn: false,
+        orders: [],
         role: "",
         uid: "",
         username: ""

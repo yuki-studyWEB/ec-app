@@ -5,6 +5,16 @@ import initialState from '../store/initialState'
 //第一引数にstate（現在のstoreの状態、ただし初回はinitialState.usersを受け取る）、第二引数にactionがreturnした値。
 export const UsersReducer = (state = initialState.users, action) => {
     switch (action.type) {
+        case Actions.FETCH_ORDERS_HISTORY:
+            return{
+                ...state,
+                orders:[...action.payload]
+            }
+        case Actions.FETCH_PRODUCTS_IN_CART:
+            return{
+                ...state,
+                cart:[...action.payload]
+            }
         case Actions.SIGN_IN:
             return{
                 ...state,
