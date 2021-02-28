@@ -49,12 +49,10 @@ const HeaderMenus = (props) => {
             .onSnapshot(snapshots =>{
                 snapshots.docChanges().forEach(change => {
                     const favorite = change.doc.data();
-                    console.log(favorite);
                     const changeType = change.type;
                     
                     switch (changeType) {
                         case 'added':
-                            console.log(userFavorites);
                             userFavorites.push(favorite);
                             break;
                         case 'modified':
