@@ -5,6 +5,13 @@ export const fetchOrdersHistoryAction = (history) => {
         payload: history
     }
 };
+export const FETCH_FAVORITE_PRODUCTS = "FETCH_FAVORITE_PRODUCTS";
+export const fetchFavoritesAction = (favorites) => {
+    return {
+        type: "FETCH_FAVORITE_PRODUCTS",
+        payload: favorites
+    }
+};
 
 export const FETCH_PRODUCTS_IN_CART = "FETCH_PRODUCTS_IN_CART";
 export const fetchProductsInCartAction = (products) => {

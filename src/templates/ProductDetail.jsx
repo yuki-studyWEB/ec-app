@@ -4,7 +4,11 @@ import { db,FirebaseTimestamp } from '../firebase';
 import HTMLReactParser from 'html-react-parser';
 import { makeStyles } from '@material-ui/styles';
 import {ImageSwiper, SizeTable} from "../components/Products/"
-import {addProductToCart} from "../reducks/users/operations"
+import {addProductToCart,addFavoriteProduct} from "../reducks/users/operations"
+import Checkbox from '@material-ui/core/Checkbox';
+import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const useStyles = makeStyles((theme) => ({
     sliderBox: {
@@ -51,7 +55,7 @@ const ProductDetail = () => {
     const selector = useSelector((state) => state);
     const path = selector.router.location.pathname; //reduxのstoreで管理しているルーティングのパスの中。
     const id = path.split('/product/')[1];
-
+    const[checked, setChecked] = useState(false);
     const[product, setProduct] = useState(null);
 
     useEffect(() =>{
@@ -61,7 +65,10 @@ const ProductDetail = () => {
                 setProduct(data)
             })
     },[]);
-
+    const handleChange = (event) => {
+        console.log(event.target.checked);
+        setChecked(event.target.checked);
+    };
     const addProduct = useCallback((selectedSize) => {
         const timeStamp = FirebaseTimestamp.now();
         dispatch(addProductToCart({
@@ -75,8 +82,19 @@ const ProductDetail = () => {
             quantity: 1,
             size: selectedSize
         }))
+    },[product])//子コンポーネントに渡すときはuseCallbackでメモ化
+
+    const addFavorite = useCallback(() => {
+        const timeStamp = FirebaseTimestamp.now();
+        dispatch(addFavoriteProduct({
+            added_at: timeStamp,
+            images: product.images,
+            name: product.name,
+            price: product.price,
+            productId: product.id,
+        }))
     },[product])
-    //子コンポーネントに渡すときはuseCallbackでメモ化。
+    
     return(
         <section className="c-section-wrapin">
             {product && (
@@ -89,6 +107,18 @@ const ProductDetail = () => {
                         <p className={classes.price}>¥{product.price.toLocaleString()}</p>
                         <div className="module-spacer--small" />
                         <SizeTable addProduct={addProduct} sizes={product.sizes}/>
+                        <div className="module-spacer--extra-extra-small" />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    icon={<FavoriteBorderIcon />}
+                                    checkedIcon={<FavoriteIcon />}
+                                    onChange={e => addFavorite(e)}
+                                    checked={checked}
+                                />
+                            }
+                            label="お気に入りに追加する"
+                        />
                         <div className="module-spacer--small" />
                         <p>{returnCodeToBr(product.description)}</p>
                     </div>

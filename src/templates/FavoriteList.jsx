@@ -2,13 +2,13 @@ import React,{useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import List from "@material-ui/core/List";
 import {makeStyles} from "@material-ui/styles";
-import { getOrdersHistory } from '../reducks/users/selectors';
-import { fetchOrdersHistory } from '../reducks/users/operations';
-import { OrderHistoryItem } from '../components/Products/';
+import { getFavoriteProducts } from '../reducks/users/selectors';
+import { fetchFavoriteProducts } from '../reducks/users/operations';
+import { FavoriteItem } from '../components/Products';
 
 const useStyles = makeStyles((theme) =>({
     orderList: {
-        background: theme.palette.grey["100"],
+        background: theme.palette.red["100"],
         margin: '0 auto',
         padding: 32,
         [theme.breakpoints.down('md')]: {
@@ -24,27 +24,26 @@ const useStyles = makeStyles((theme) =>({
     }
 }));
 
-const OrderHistory = () => {
+const FavoriteList = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const selecotor = useSelector((state) => state);
-    const orders = getOrdersHistory(selecotor); //初期状態initialState（空）。useEffectでoperationを起動する。
+    const favorites = getFavoriteProducts(selecotor);
 
     useEffect(() =>{
-        dispatch(fetchOrdersHistory())
-        //ordersHistory取得し、reduxのストアを書き換えると、selectorもその情報を自動取得しordersに代入してくれる。
+        dispatch(fetchFavoriteProducts())
     },[])
 
     return (
         <section className="c-section-wrapin">
             <List className={classes.orderList}>
-            <h2 className={classes.ttlOrderhistory}>注文履歴</h2>
-                {orders.length > 0 && (
-                    orders.map(order => <OrderHistoryItem order={order} key={order.id} />)
+            <h2 className={classes.ttlOrderhistory}>お気に入り</h2>
+                {favorites.length > 0 && (
+                    favorites.map(favorite => <FavoriteItem favorite={favorite} key={favorite.favoriteId} />)
                 )}
             </List>
         </section>
     )
 }
 
-export default OrderHistory
+export default FavoriteList

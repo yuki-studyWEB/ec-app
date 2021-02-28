@@ -14,6 +14,8 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import HistoryIcon from '@material-ui/icons/History';
 import PersonIcon from '@material-ui/icons/Person';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import Badge from '@material-ui/core/Badge';
 import {TextInput} from '../UIkit/index'
 import {signOut} from '../../reducks/users/operations'
 import {db} from '../../firebase/index'
@@ -63,9 +65,10 @@ const ClosableDrawer = (props) => {
     ])
 
     const menus = [
-        {func: selectMenu, label:"商品登録",    icon:<AddCircleIcon />, id: "register", value: "/product/edit"},
-        {func: selectMenu, label:"注文履歴",    icon:<HistoryIcon />,   id: "history",  value: "/order/history"},
-        {func: selectMenu, label:"プロフィール", icon:<PersonIcon />,    id: "profile",  value: "/user/mypage"}
+        {func: selectMenu, label:"商品登録",    icon:<AddCircleIcon />,     id: "register", value: "/product/edit"},
+        {func: selectMenu, label:"注文履歴",    icon:<HistoryIcon />,       id: "history",  value: "/order/history"},
+        {func: selectMenu, label:"プロフィール", icon:<PersonIcon />,        id: "profile",  value: "/user/mypage"},
+        {func: selectMenu, label:"お気に入り",   icon:<FavoriteBorderIcon />,id: "favorites",  value: "/favorites"}
     ]
 
     useEffect(() =>{

@@ -8,4 +8,5 @@ export {default as ProductDetail} from './ProductDetail'
 export {default as CartList} from './CartList'
 export {default as OrderConfirm} from './OrderConfirm'
 export {default as OrderHistory} from './OrderHistory'
+export {default as FavoriteList} from './FavoriteList'
 //エントリポイントを作る際、Default exportされたモジュールをそのままエクスポートしたいため{ default as Foo }の形にする。

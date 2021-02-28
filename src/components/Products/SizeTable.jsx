@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect, useState} from 'react';
 import IconButton from "@material-ui/core/IconButton";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -6,12 +6,12 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import {makeStyles} from "@material-ui/styles";
-import ShoppingCartIcon from "@material-ui/icons/ShoppingCart"
-import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder"
+import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+
 
 const useStyles = makeStyles({
     iconCell: {
-        padding: 0,
+        padding: '0 5px 0 0',
         height: 48,
         width: 48
     }
@@ -19,16 +19,16 @@ const useStyles = makeStyles({
 
 const SizeTable = (props) => {
     const classes = useStyles();
-
     const sizes = props.sizes;
+
 
     return (
         <TableContainer>
             <Table>
                 <TableBody>
                     {sizes.length > 0 &&(
-                        sizes.map(size =>(
-                            <TableRow key={size.size}>
+                        sizes.map((size,index) =>(
+                            <TableRow key={index}>
                                 <TableCell component="th" scope="row">
                                     {size.size}
                                 </TableCell>
@@ -43,8 +43,6 @@ const SizeTable = (props) => {
                                     ) : (
                                         <div>売り切れ</div>
                                     )}
-                                </TableCell>
-                                <TableCell　className={classes.iconCell}>
                                 </TableCell>
                             </TableRow>
                         ))

@@ -1,5 +1,5 @@
 //redux-thunk使う意味・・・主にはactions、 action creators、 componentsが「直接的に」データに影響を起こさせないようにするため。
-import {signInAction, signOutAction, fetchProductsInCartAction, fetchOrdersHistoryAction} from "./actions"
+import {signInAction, signOutAction, fetchProductsInCartAction, fetchOrdersHistoryAction, fetchFavoritesAction} from "./actions"
 import {push} from 'connected-react-router'
 import {auth, db, FirebaseTimestamp} from '../../firebase/index'
 //actionsと連動させる。
@@ -10,7 +10,15 @@ export const addProductToCart = (addedProduct) => {
         const cartRef = db.collection('users').doc(uid).collection('cart').doc(); //サブコレクションusers/{id}/cart/{id}
         addedProduct['cartId'] = cartRef.id; //今回追加するデータの中にuserのサブコレクションのIDをフィールドとして追加
         await cartRef.set(addedProduct);
-        dispatch(push('/'))
+        dispatch(push('/cart'))
+    }
+}
+export const addFavoriteProduct = (addedProduct) => {
+    return async (dispatch, getState) => {
+        const uid = getState().users.uid;
+        const cartRef = db.collection('users').doc(uid).collection('favorites').doc(); //サブコレクションusers/{id}/favorites/{id}
+        addedProduct['favoriteId'] = cartRef.id; //今回追加するデータの中にuserのサブコレクションのIDをフィールドとして追加
+        await cartRef.set(addedProduct);
     }
 }
 
@@ -30,6 +38,26 @@ export const fetchOrdersHistory = () => {
                 })
 
                 dispatch(fetchOrdersHistoryAction(list));
+            })
+
+    }
+}
+export const fetchFavoriteProducts = () => {
+    return async (dispatch, getState) => {
+        const uid = getState().users.uid;
+        const list = [];
+
+        db.collection('users').doc(uid)
+            .collection('favorites')
+            .orderBy('added_at', 'desc')
+            .get()
+            .then((snapshots) => {
+                snapshots.forEach(snapshot => {
+                    const data = snapshot.data()
+                    list.push(data)
+                })
+
+                dispatch(fetchFavoritesAction(list));
             })
 
     }

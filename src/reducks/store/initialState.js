@@ -4,6 +4,7 @@ const initialState = {
     },
     users: {
         cart: [], //サブコレクション"cart""
+        favorites: [],
         isSignedIn: false,
         orders: [],
         role: "",

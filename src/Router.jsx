@@ -1,6 +1,6 @@
 import React from 'react';
 import {Route, Switch} from "react-router";
-import {CartList, OrderConfirm,OrderHistory, SignUp, SignIn, ProductList, Reset, ProductEdit,ProductDetail} from "./templates";
+import {CartList,FavoriteList, OrderConfirm,OrderHistory, SignUp, SignIn, ProductList, Reset, ProductEdit,ProductDetail} from "./templates";
 import Auth from './Auth'
 
 const Router = () => {
@@ -17,6 +17,7 @@ const Router = () => {
                 <Route exact path={"/cart"} component={CartList} />
                 <Route exact path={"/order/confirm"} component={OrderConfirm} />
                 <Route exact path={"/order/history"} component={OrderHistory} />
+                <Route exact path={"/favorites"} component={FavoriteList} />
             </Auth>
         </Switch>// exactをつけるとURLが完全一致が条件になる。()?で囲んだ文字列はあってもなくてもマッチ。:idは変数扱い
     )   //認証していないと見れないページは<Auth>で囲む

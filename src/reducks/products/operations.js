@@ -28,7 +28,6 @@ export const orderProduct = (productsInCart, amount) =>{
         for (const product of productsInCart) {
             const snapshot = await productsRef.doc(product.productId).get()
             const sizes = snapshot.data().sizes;
-            console.log(sizes);
             const updateSizes = sizes.map(size => {
                 if (size.size === product.size){
                     if (size.quantity === 0 ) {

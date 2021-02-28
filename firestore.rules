@@ -14,6 +14,10 @@ service cloud.firestore {
       match /orders/{orderId} {
         allow read, write: if request.auth.uid == userId;
       }
+
+      match /favorites/{favoriteId} {
+        allow read, write: if request.auth.uid == userId;
+      }
     } //usersCollectionのuseIdの書き込み、読み取り権限の設定 
 
     match /products/{productId} {

@@ -10,6 +10,11 @@ export const UsersReducer = (state = initialState.users, action) => {
                 ...state,
                 orders:[...action.payload]
             }
+        case Actions.FETCH_FAVORITE_PRODUCTS:
+            return{
+                ...state,
+                favorites:[...action.payload]
+            }
         case Actions.FETCH_PRODUCTS_IN_CART:
             return{
                 ...state,
