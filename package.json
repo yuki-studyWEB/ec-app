@@ -9,6 +9,7 @@
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.7.1",
+    "algoliasearch": "^4.8.5",
     "connected-react-router": "^6.8.0",
     "firebase": "^8.2.7",
     "history": "^4.10.1",

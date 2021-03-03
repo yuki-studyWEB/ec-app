@@ -1,4 +1,4 @@
-import React,{useCallback,useEffect,useState} from 'react';
+import React,{useEffect,useState} from 'react';
 import {makeStyles} from '@material-ui/styles';
 import {useDispatch} from 'react-redux';
 import {push} from 'connected-react-router';
@@ -15,11 +15,16 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import HistoryIcon from '@material-ui/icons/History';
 import PersonIcon from '@material-ui/icons/Person';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import Badge from '@material-ui/core/Badge';
 import {TextInput} from '../UIkit/index'
 import {signOut} from '../../reducks/users/operations'
+import {reflectSearchResult} from '../../reducks/products/operations';
 import {db} from '../../firebase/index'
-
+const algoliasearch = require("algoliasearch");
+const client = algoliasearch(
+  process.env.REACT_APP_ALGOLIA_ID,
+  process.env.REACT_APP_ADMIN_API_KEY
+);
+const index = client.initIndex("ecProducts");
 const useStyles = makeStyles((theme)=>({
     drawer: {
         [theme.breakpoints.up('sm')]: {
@@ -43,11 +48,16 @@ const ClosableDrawer = (props) => {
     const dispatch = useDispatch();
     const {container} = props;
 
-    const [keyword, setKeyword] = useState("");
+    const onSearch = async(e) => {
+        let tempResults = [];
+        await index
+        .search(e.target.value)
+        .then(responses => {
+            tempResults = responses.hits;
+        });
 
-    const inputKeyword = (event) =>{
-        setKeyword(event.target.value)
-    };
+        dispatch(reflectSearchResult(tempResults));
+    }
 
     const selectMenu = (event, path) => {
         dispatch(push(path)) //menu.value
@@ -78,7 +88,9 @@ const ClosableDrawer = (props) => {
             .then(snapshots =>{
                 const list = [];
                 snapshots.forEach(snapshot => {
+                    console.log(snapshot)
                     const category = snapshot.data()
+                    console.log(category)
                     list.push({func: selectMenu, label: category.name, id: category.id, value: `/?category=${category.id}`})
                 })
                 setFilters(prevState => [...prevState, ...list])
@@ -103,7 +115,7 @@ const ClosableDrawer = (props) => {
                 <div className={classes.searchField}>
                     <TextInput
                         fullWidth={false} label={"キーワードを入力"} multiline={false}
-                        onChange={inputKeyword} required={false} rows={1} value={keyword} type={"text"}
+                        onChange={onSearch} required={false} rows={1} type={"text"}
                     />
                     <IconButton>
                         <SearchIcon />

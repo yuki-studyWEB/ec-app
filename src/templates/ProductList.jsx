@@ -10,11 +10,13 @@ const ProductList = () => {
     const products = getProducts(selector);
 
     const query = selector.router.location.search;
+    //selectorがconnected-react-routerのURLに関する値を持っている。location.search =>クエリパラメータ
     const gender = /^\?gender=/.test(query) ? query.split('?gender=')[1] : "";
     const category = /^\?category=/.test(query) ? query.split('?category=')[1] : "";
+    const keyword = /^\keyword=/.test(query) ? query.split('?keyword=')[1] : "";
 
     useEffect(()=>{
-        dispatch(fetchProducts(gender, category))
+        dispatch(fetchProducts(gender, category, keyword))
     },[query]); //queryが変わる度に実行する。
 
     return(

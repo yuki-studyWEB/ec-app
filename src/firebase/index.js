@@ -13,3 +13,5 @@ export const storage = firebase.storage();
 export const functions = firebase.functions();
 export const FirebaseTimestamp = firebase.firestore.Timestamp; //データの作成日時等を記録してくれる。
 //各firebaseのサービスのメソッドを定数に入れてexport
+
+export default firebase;

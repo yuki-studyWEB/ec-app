@@ -93,6 +93,18 @@ export const orderProduct = (productsInCart, amount) =>{
     }
 }
 
+export const reflectSearchResult = (tempResults) => {
+    return async (dispatch) => {
+        const productList = [];
+        const searchResults = tempResults;
+        console.log(searchResults)
+        searchResults.forEach(result =>{
+            productList.push(result)
+        })
+        dispatch(fetchProductsAction(productList))
+    }
+}
+
 export const fetchProducts = (gender, category) => {
     return async (dispatch) => {
         let query = productsRef.orderBy('updated_at','desc');

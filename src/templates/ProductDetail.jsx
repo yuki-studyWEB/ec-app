@@ -73,13 +73,12 @@ const ProductDetail = () => {
     useEffect(() =>{
         if(checkFavo.length !== 0){
             setChecked(true)
-        }else{setChecked(false)}
+        } else {
+            setChecked(false)}
     })
 
 
     const handleChange = (event) => {
-        setChecked(event.target.checked);
-        console.log(checked)
         if(checked !== true){
             const timeStamp = FirebaseTimestamp.now();
             dispatch(addFavoriteProduct({
@@ -90,7 +89,7 @@ const ProductDetail = () => {
                 productId: product.id,
             }))
         } else {
-            if(checkFavo.length !== 0){
+            if(checkFavo.length > 0){
                 db.collection("users").doc(uid)
                 .collection("favorites").doc(checkFavo[0].favoriteId)
                 .delete();
