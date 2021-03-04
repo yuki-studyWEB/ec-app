@@ -1,4 +1,3 @@
-import { Category } from '@material-ui/icons';
 import React,{useCallback,useState, useEffect} from 'react'
 import { TextInput, SelectBox,PrimaryButton } from '../components/UIkit';
 import {ImageArea,SetSizeArea} from '../components/Products/';
@@ -45,13 +44,13 @@ const ProductEdit = () => {
             db.collection('products').doc(id).get() //idのオブジェクトを入手
                 .then(snapshot => {
                 const data = snapshot.data();
-                setImages(data.images);
-                setName(data.name);
-                setDescription(data.description);
-                setCategory(data.category);
-                setGender(data.gender);
-                setPrice(data.price);
-                setSizes(data.sizes)
+                    setImages(data.images);
+                    setName(data.name);
+                    setDescription(data.description);
+                    setCategory(data.category);
+                    setGender(data.gender);
+                    setPrice(data.price);
+                    setSizes(data.sizes);
                 }) //setStateでstateを先ほど入手したdataに更新してあげる。
         }
     },[id]);

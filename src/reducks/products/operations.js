@@ -97,7 +97,6 @@ export const reflectSearchResult = (tempResults) => {
     return async (dispatch) => {
         const productList = [];
         const searchResults = tempResults;
-        console.log(searchResults)
         searchResults.forEach(result =>{
             productList.push(result)
         })
@@ -124,8 +123,9 @@ export const fetchProducts = (gender, category) => {
 }
 
 export const saveProduct = (id,name,description,category,gender,price,images, sizes) => {
-    return async (dispatch) => {
-        const timestamp = FirebaseTimestamp.now()
+    return async (dispatch, getState) => {
+        const timestamp = FirebaseTimestamp.now();
+        const uid = getState().users.uid;
 
         const data = {
             category: category,
@@ -135,7 +135,8 @@ export const saveProduct = (id,name,description,category,gender,price,images, si
             name: name,
             price: parseInt(price, 10), //文字列の値を数値に10進数の変換
             sizes: sizes,
-            updated_at: timestamp
+            updated_at: timestamp,
+            creatorId: uid
         }
         if(id === ""){
         const ref = productsRef.doc();
@@ -146,6 +147,7 @@ export const saveProduct = (id,name,description,category,gender,price,images, si
 
         return productsRef.doc(id).set(data, {merge: true}) //{merge: true}更新された部分だけを更新
             .then(() =>{
+                alert("商品の出品が完了しました。")
                 dispatch(push('/'))
             }).catch((error)=>{
                 throw new Error(error)

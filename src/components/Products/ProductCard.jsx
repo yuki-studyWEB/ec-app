@@ -6,12 +6,14 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import NoImage from '../../assets/img/src/no_image.png'
 import {push} from 'connected-react-router';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MOreVertIcon from '@material-ui/icons/MoreVert';
 import {deleteProduct} from "../../reducks/products/operations";
+import {getUserId} from "../../reducks/users/selectors";
+
 
 //themeを使うことでブレイクポイントや配色の設定が可能
 const useStyles = makeStyles ((theme) => ({
@@ -27,7 +29,8 @@ const useStyles = makeStyles ((theme) => ({
     },
     content: {
         display: 'flex',
-        padding: '16px 8px',
+        justifyContent: 'space-between',
+        padding: '16px 8px 16px 20px',
         textAlign: 'left',
         '&:last-child': {
             paddingBottom: 16
@@ -46,6 +49,8 @@ const useStyles = makeStyles ((theme) => ({
 const ProductCard = (props) => {
     const classes = useStyles();
     const dispatch = useDispatch();
+    const selector = useSelector((state) =>state)
+    const uid = getUserId(selector) 
 
     const [anchorEl, setAnchorEl] = useState(null);
 
@@ -76,32 +81,40 @@ const ProductCard = (props) => {
                         ¥{price}
                     </Typography>
                 </div>
-                <IconButton onClick={handleClick}>
-                    <MOreVertIcon />
-                </IconButton>
-                <Menu
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)} //boolean型に変換、nullの場合false
-                    onClose={handleClose}
-                >
-                    <MenuItem
-                        onClick={() => {
-                            dispatch(push('/product/edit/' + props.id))
-                            handleClose()
-                        }}
+                {props.creatorId === uid ? ( //商品の作者が一致していれば編集削除可能
+                <div>
+                    <IconButton onClick={handleClick}>
+                        <MOreVertIcon />
+                    </IconButton>
+                    <Menu
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={Boolean(anchorEl)}
+                        onClose={handleClose}
                     >
-                        編集する
-                    </MenuItem>
-                    <MenuItem
-                        onClick={() =>{
-                            dispatch(deleteProduct(props.id))
-                            handleClose()
-                        }}
-                    >
-                        削除する
-                    </MenuItem>
-                </Menu>
+                        <MenuItem
+                            onClick={() => {
+                                dispatch(push('/product/edit/' + props.id))
+                                handleClose()
+                            }}
+                        >
+                            編集する
+                        </MenuItem>
+                        <MenuItem
+                            onClick={() =>{
+                                dispatch(deleteProduct(props.id))
+                                handleClose()
+                            }}
+                        >
+                            削除する
+                        </MenuItem>
+                    </Menu>
+                </div>
+                ) : (
+                <div>
+
+                </div>
+                )}
             </CardContent>
         </Card>
     )

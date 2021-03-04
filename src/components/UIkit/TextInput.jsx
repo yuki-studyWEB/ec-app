@@ -13,6 +13,7 @@ const TextInput = (props) => {
             value={props.value}
             type={props.type}
             onChange={props.onChange} //入力した項目が変わった時に親のコンポーネントにその変更を伝えるための関数を実行する。
+            onKeyPress={props.onKeyPress}
         />
     )
 }

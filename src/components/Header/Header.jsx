@@ -19,10 +19,15 @@ const useStyles = makeStyles({
     toolBar: {
         margin: '0 auto',
         maxWidth: 1024,
-        width: '100%'
+        width: '100%',
+        height: 85
     },
     iconButtons: {
         margin: '0 0 0 auto'
+    },
+    logo:{
+        width: 200,
+        cursor: 'pointer'
     }
 })
 
@@ -46,7 +51,7 @@ const Header = () => {
             <AppBar position="fixed" className={classes.menuBar}>
                 <Toolbar className={classes.toolBar}>
                     <img 
-                    src={logo} alt="Logo" width="128px" 
+                    src={logo} alt="Logo" className={classes.logo}
                     onClick={()=> dispatch(push("/"))}
                     />
                     {isSignedIn && (

@@ -47,6 +47,7 @@ const ClosableDrawer = (props) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const {container} = props;
+    const [searchResult, setSearchResult] = useState([])
 
     const onSearch = async(e) => {
         let tempResults = [];
@@ -55,9 +56,15 @@ const ClosableDrawer = (props) => {
         .then(responses => {
             tempResults = responses.hits;
         });
-
-        dispatch(reflectSearchResult(tempResults));
+        setSearchResult(tempResults);
     }
+
+    const confirmSearch = (event) => {
+        if(event.key === "Enter"|| event.type === "click"){
+            dispatch(reflectSearchResult(searchResult));
+            props.onClose(event);
+        }
+    } 
 
     const selectMenu = (event, path) => {
         dispatch(push(path)) //menu.value
@@ -88,9 +95,7 @@ const ClosableDrawer = (props) => {
             .then(snapshots =>{
                 const list = [];
                 snapshots.forEach(snapshot => {
-                    console.log(snapshot)
                     const category = snapshot.data()
-                    console.log(category)
                     list.push({func: selectMenu, label: category.name, id: category.id, value: `/?category=${category.id}`})
                 })
                 setFilters(prevState => [...prevState, ...list])
@@ -116,9 +121,10 @@ const ClosableDrawer = (props) => {
                     <TextInput
                         fullWidth={false} label={"キーワードを入力"} multiline={false}
                         onChange={onSearch} required={false} rows={1} type={"text"}
+                        onKeyPress={(e) => confirmSearch(e)}
                     />
                     <IconButton>
-                        <SearchIcon />
+                        <SearchIcon button onClick={(e) => confirmSearch(e)}/>
                     </IconButton>
                 </div>
                 <Divider />
