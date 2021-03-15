@@ -1,19 +1,13 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {TextInput} from "../UIkit";
-import IconButton from "@material-ui/core/IconButton";
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import {Checkbox, FormControlLabel, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from "@material-ui/core";
 import {makeStyles} from "@material-ui/styles";
+import { SelectSizeBox } from '../UIkit';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme)=>({
     checkIcon: {
         float: 'right'
     },
@@ -21,8 +15,22 @@ const useStyles = makeStyles({
         padding: 0,
         width: 48,
         height: 48
+    },
+    boxMargin: {
+        padding: '0 15px'
+    },
+    others: {
+        width: '30%',
+        [theme.breakpoints.down('sm')]:{
+            width: 'auto'
+        },
+        display: 'inline-block',
+        verticalAlign: 'bottom',
+        textAlign: 'center',
+        marginBottom: 12,
+        marginRight: 40
     }
-})
+}))
 
 //props.sizes,props.setSizes
 const SetSizeArea = (props) => {
@@ -30,8 +38,26 @@ const SetSizeArea = (props) => {
 
     const [index, setIndex] = useState(0),
           [size, setSize] = useState(""),
+          [checked, setChecked] = useState(false),
           [quantity, setQuantity] = useState(0);
-
+    const sizeList = [];
+    console.log(sizeList)
+    switch(props.category){
+        case "shoes":
+        for(let i=22; i < 29.5; i+=0.5){
+            const num = i
+            const shoesize = num.toFixed(1);
+            sizeList.push(shoesize)
+        }
+        break;
+        case "others":
+        sizeList.push('FREE');
+        break;
+        default:
+        sizeList.push('SS','S','M','L','LL');
+        break;
+    }
+    console.log(sizeList)
     //onChangeイベント ...値が変更された時
     const inputSize = useCallback((event) =>{
         setSize(event.target.value)
@@ -76,6 +102,11 @@ const SetSizeArea = (props) => {
         props.setSizes(newSizes)
     }
 
+    const handleChange = (event) => {
+        setChecked(event.target.checked);
+        
+    };
+
     useEffect(() => {
         setIndex(props.sizes.length)
     },[props.sizes.length]);
@@ -84,7 +115,7 @@ const SetSizeArea = (props) => {
 
     return(
         <div>
-            <TableContainer component={Paper}>
+            <TableContainer className={classes.boxMargin} component={Paper}>
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -116,18 +147,43 @@ const SetSizeArea = (props) => {
                     </TableBody>
                 </Table>
                 <div>
+                    {checked ? (
+                        <TextInput
+                            fullWidth={false} label={"size"} multiline={false} required={true}
+                            onChange={inputSize} rows={1} value={size} type={"text"}
+                        />
+                    ):(
+                        <>
+                        {sizeList.length !== 1 ?(
+                            <SelectSizeBox
+                                label={"size"} required={true} options={sizeList} select={setSize} value={size}
+                            />
+                        ):(
+                            <p className={classes.others}>{sizeList[0]}</p>
+                        )}
+                        </>
+                    )}
                     <TextInput
-                        fullWidth={false} label={"サイズ"} multiline={false} required={true}
-                        onChange={inputSize} rows={1} value={size} type={"text"}
-                    />
-                    <TextInput
-                        fullWidth={false} label={"数量"} multiline={false} required={true}
+                        fullWidth={false} label={"quantity"} multiline={false} required={true}
                         onChange={inputQuantity} rows={1} value={quantity} type={"number"}
                     />
                 </div>
+                <div className='abreastContents space-between'>
+                <FormControlLabel
+                    control={
+                    <Checkbox
+                        checked={checked}
+                        onChange={handleChange}
+                        name="checked"
+                        color="primary"
+                    />
+                    }
+                    label="サイズを手入力"
+                />
                 <IconButton className={classes.checkIcon} onClick={() => addSize(index,size,quantity)}>
                     <CheckCircleIcon />
                 </IconButton>
+                </div>
             </TableContainer>
         </div>
     )

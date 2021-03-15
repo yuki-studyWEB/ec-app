@@ -20,6 +20,13 @@ export const fetchProductsInCartAction = (products) => {
         payload: products
     }
 };
+export const CHANGE_USER_DATA = "CHANGE_USER_DATA";
+export const changeUserDataAction = (userState) => {
+    return {
+        type: "CHANGE_USER_DATA",
+        payload: userState
+    }
+};
 
 export const SIGN_IN = "SIGN_IN";
 export const signInAction = (userState) => {
@@ -29,7 +36,8 @@ export const signInAction = (userState) => {
             isSignedIn: true,
             role: userState.role,
             uid: userState.uid,
-            username: userState.username
+            username: userState.username,
+            email: userState.email
         }
     } //Reducerに渡すのはプレーンなデータだけ。関数など入れない。
 }; //actionsのオブジェクトは必ずexportしてあげる。

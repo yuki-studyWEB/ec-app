@@ -1,17 +1,26 @@
 import { db, FirebaseTimestamp } from "../../firebase"
 import {push} from 'connected-react-router'
-import {fetchProductsAction, deleteProductAction} from './actions'
+import {fetchProductsAction, deleteProductAction, searchResultAction} from './actions'
+const algoliasearch = require("algoliasearch");
+const client = algoliasearch(
+  process.env.REACT_APP_ALGOLIA_ID,
+  process.env.REACT_APP_ADMIN_API_KEY
+);
+const index = client.initIndex("ecProducts");
 
 const productsRef = db.collection('products');
 
 export const deleteProduct = (id) => {
     return async (dispatch, getState) => {
-        productsRef.doc(id).delete()
-            .then(() => {
-                const prevProducts = getState().products.list;
-                const nextProducts = prevProducts.filter(product => product.id !== id)
-                dispatch(deleteProductAction(nextProducts))
-            })
+        index.deleteObject(id).then(() => {
+            productsRef.doc(id).delete()
+                .then(() => {
+                    const prevProducts = getState().products.list;
+                    const nextProducts = prevProducts.filter(product => product.id !== id)
+                    dispatch(deleteProductAction(nextProducts))
+                })
+            
+        });
     }
 }
 
@@ -48,7 +57,8 @@ export const orderProduct = (productsInCart, amount) =>{
                 images: product.images,
                 name: product.name,
                 price: product.price,
-                size: product.size
+                size: product.size,
+                sellerName: product.sellerName
             });//注文履歴用の商品データ
 
             batch.update(
@@ -100,12 +110,15 @@ export const reflectSearchResult = (tempResults) => {
         searchResults.forEach(result =>{
             productList.push(result)
         })
-        dispatch(fetchProductsAction(productList))
+        console.log(productList)
+        dispatch(searchResultAction(productList))
     }
 }
 
 export const fetchProducts = (gender, category) => {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
+        const searchResults = getState().products.searchResult
+        console.log(searchResults);
         let query = productsRef.orderBy('updated_at','desc');
         query = (gender !== "") ? query.where('gender','==',gender) : query;
         query = (category !== "") ? query.where('category', '==', category) : query;
@@ -117,15 +130,27 @@ export const fetchProducts = (gender, category) => {
                     const product = snapshot.data();
                     productList.push(product)
                 })
-                dispatch(fetchProductsAction(productList))
-            })
+                const complete = searchResults.concat(productList);
+                dispatch(fetchProductsAction(complete));
+        })
     }
 }
 
-export const saveProduct = (id,name,description,category,gender,price,images, sizes) => {
+export const saveProduct = (id,name,description,category,gender,price,images, keyword, sizes) => {
     return async (dispatch, getState) => {
+        //バリデーション
+        console.log(sizes)
+        if (name === "" || description==="" || category==="" || gender==="" || price===""){
+            alert("必須項目が未入力です")
+            return false
+        }
+        if (sizes.length === 0){
+            alert("サイズを一つ以上作成してください")
+            return false
+        }
         const timestamp = FirebaseTimestamp.now();
         const uid = getState().users.uid;
+        const userName = getState().users.username;
 
         const data = {
             category: category,
@@ -136,15 +161,29 @@ export const saveProduct = (id,name,description,category,gender,price,images, si
             price: parseInt(price, 10), //文字列の値を数値に10進数の変換
             sizes: sizes,
             updated_at: timestamp,
-            creatorId: uid
+            creatorId: uid,
+            creatorName: userName,
+            keyword: keyword
         }
         if(id === ""){
+         //既存商品の編集の場合、ここを実行すると再度ドキュメントidが新しく作られてしまうため条件分岐させる。
         const ref = productsRef.doc();
         id = ref.id
         data.id = id //dataに自動采配されたid項目を追加
         data.created_at = timestamp //dataに新規作成したサーバー時刻を追加
-        } //既存商品の編集の場合、ここを実行すると再度ドキュメントidが新しく作られてしまうため条件分岐させる。
-
+        } else {
+            //algolia、オブジェクトの更新
+            data.objectID = id;
+            index.saveObject(data)    
+            .then(() => {
+                console.log('Firebase object indexed in Algolia', data.objectID);
+                delete data.objectID;
+            })
+            .catch(error => {
+                console.error('Error when indexing contact into Algolia', error);
+                process.exit(1);
+            });
+        }
         return productsRef.doc(id).set(data, {merge: true}) //{merge: true}更新された部分だけを更新
             .then(() =>{
                 alert("商品の出品が完了しました。")

@@ -16,7 +16,7 @@ export const theme = createMuiTheme({
     primary: {
       light: '#88ffff',
       main: '#4dd0e1',
-      dark: '#009faf',
+      dark: '#028f9c',
       contrastText: '#000',
     },
     secondary: {
@@ -42,7 +42,16 @@ export const theme = createMuiTheme({
       A700: "#616161"
     },
     red: {
-      100: "fff5f5"
+      light: '#fa2045',
+      main: '#ed052d',
+      dark: '#d6062a',
+      contrastText: '#000',
+    },
+    ttl: {
+      light: '#454545',
+      main: '#303030',
+      dark: '#121212',
+      contrastText: '#000',
     }
   },
 });

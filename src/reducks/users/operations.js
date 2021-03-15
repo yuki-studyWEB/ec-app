@@ -1,5 +1,5 @@
 //redux-thunk使う意味・・・主にはactions、 action creators、 componentsが「直接的に」データに影響を起こさせないようにするため。
-import {signInAction, signOutAction, fetchProductsInCartAction, fetchOrdersHistoryAction, fetchFavoritesAction} from "./actions"
+import {signInAction, signOutAction, changeUserDataAction, fetchProductsInCartAction, fetchOrdersHistoryAction, fetchFavoritesAction} from "./actions"
 import {push} from 'connected-react-router'
 import {auth, db, FirebaseTimestamp} from '../../firebase/index'
 //actionsと連動させる。
@@ -14,11 +14,12 @@ export const addProductToCart = (addedProduct) => {
     }
 }
 export const addFavoriteProduct = (addedProduct) => {
-    return async (dispatch, getState) => {
+    return async (dispatch,getState) => {
         const uid = getState().users.uid;
-        const cartRef = db.collection('users').doc(uid).collection('favorites').doc(); //サブコレクションusers/{id}/favorites/{id}
-        addedProduct['favoriteId'] = cartRef.id; //今回追加するデータの中にuserのサブコレクションのIDをフィールドとして追加
-        await cartRef.set(addedProduct);
+        console.log(uid)
+        const favoRef = db.collection('users').doc(uid).collection('favorites').doc(); //サブコレクションusers/{id}/favorites/{id}
+        addedProduct['favoriteId'] = favoRef.id; //今回追加するデータの中にuserのサブコレクションのIDをフィールドとして追加
+        await favoRef.set(addedProduct);
     }
 }
 
@@ -78,12 +79,12 @@ export const listenAuthState = () => {
                 db.collection('users').doc(uid).get()
                     .then(snapshot => {
                         const data = snapshot.data() //DBから入手したデータが入っている。
-
                         dispatch(signInAction({
                             isSignedIn: true,
                             role: data.role,
                             uid: uid,
-                            username: data.username
+                            username: data.username,
+                            email: data.email,
                         }))
 
                     })
@@ -93,6 +94,122 @@ export const listenAuthState = () => {
         })
     }
 }
+
+//ユーザー登録情報の変更
+export const changeUserName = (username,password) => {
+    return async (dispatch,getState) => {
+        const email = getState().users.email;
+        if(username !== ""|| password !==""){
+
+        auth.signInWithEmailAndPassword(email, password)
+            .then(result => {
+                const user = result.user;
+                const timestamp = FirebaseTimestamp.now(); //FirebaseTimestamp.now()で現在のサーバー時刻を取得
+                const userChangeData = {
+                    updated_at: timestamp,
+                    username: username
+                } //actionにはオブジェクト型を送る必要がある。
+                if(user) {
+                    const uid = user.uid
+                    db.collection('users').doc(uid).set(userChangeData, {merge: true})
+                        .then(() => {
+                            dispatch(changeUserDataAction(userChangeData));
+                            dispatch(push('/user/mypage'))
+                        })
+                }
+            })
+            .catch(() => {
+                alert('error: パスワードが間違っていないか確認してください')
+            });
+        } else {
+            alert("必須項目を入力してください")
+            return false
+        }
+    }
+};
+
+export const changeUserEmail = (userEmail,password) => {
+    return async (dispatch,getState) => {
+        const email = getState().users.email;
+        if(userEmail !== ""|| password !==""){
+            if(/[\w\-\._]+@[\w\-\._]+\.[A-Za-z]+/.test(userEmail)){
+                auth.signInWithEmailAndPassword(email, password)
+                    .then(result => {
+                        const user = result.user;
+                        const timestamp = FirebaseTimestamp.now();
+                        const userChangeData = {
+                            updated_at: timestamp,
+                            email: userEmail
+                        }
+                        if(user) {
+                            user.updateEmail(userEmail).then(function() {
+                                const uid = user.uid
+                                db.collection('users').doc(uid).set(userChangeData, {merge: true})
+                                    .then(() => {
+                                        dispatch(changeUserDataAction(userChangeData));
+                                        dispatch(push('/user/mypage'))
+                                    })
+                            }).catch(function() {
+                                alert('error: ネットワーク通信エラー')
+                            });
+                        }
+                    })
+                    .catch(() => {
+                        alert('error: パスワードが間違っていないか確認してください')
+                    });   
+            } else {
+                alert("有効なメールアドレスではありません。")
+                return false
+            }
+        } else {
+            alert("必須項目を入力してください")
+            return false
+        }
+    }
+};
+
+export const addUserBaseData = (newUserData,password) => {
+    return async (dispatch,getState) => {
+        const email = getState().users.email;
+        if(newUserData.lastName!==""||newUserData.firstName!==""||newUserData.lastKana!==""||newUserData.firstKana!==""||newUserData.postCodeH!==""||newUserData.postCodeF!==""||newUserData.address1!==""||newUserData.address2!==""||newUserData.address3!==""||password !==""){
+
+        auth.signInWithEmailAndPassword(email, password)
+            .then(result => {
+                const user = result.user
+
+                const fullName = newUserData.lastName + "　" + newUserData.firstName;
+                const fullNameKana = newUserData.lastKana + "　" + newUserData.firstKana;
+                const fullPostCode = newUserData.postCodeH + "-" + newUserData.postCodeF;
+                const fulladdress = newUserData.address1 + "　" + newUserData.address2 + "　" + newUserData.address3;
+                const telNumber = (newUserData.tel === "") ? "" : newUserData.tel;
+                const timestamp = FirebaseTimestamp.now()
+                const userChangeData = {
+                    updated_at: timestamp,
+                    fullName: fullName,
+                    fullNameKana: fullNameKana,
+                    fullPostCode: fullPostCode,
+                    fulladdress: fulladdress,
+                    tel: telNumber
+                }
+                if(user) {
+                    const uid = user.uid
+                    db.collection('users').doc(uid).set(userChangeData, {merge: true})
+                        .then(() => {
+                            dispatch(changeUserDataAction(userChangeData));
+
+                            dispatch(push('/user/mypage'))
+                        })
+                }
+            })
+            .catch(() => {
+                alert('error: パスワードが間違っていないか確認してください')
+            });
+        } else {
+            alert("必須項目を入力してください")
+            return false
+        }
+    }
+};
 
 export const resetPassword = (email) => {
     return async (dispatch) => {
@@ -134,7 +251,8 @@ export const signIn = (email, password) => {
                                 isSignedIn: true,
                                 role: data.role,
                                 uid: uid,
-                                username: data.username
+                                username: data.username,
+                                email: email
                             }))
 
                             dispatch(push('/'))
@@ -159,7 +277,6 @@ export const signUp = (username, email, password,confirmPassword) => {
         //↓emailpassword認証用のユーザーを作るメソッド、入力したemailとpasswordを引数に認証ユーザーが作成される。
         return auth.createUserWithEmailAndPassword(email,password)
             .then(result => {
-                console.log(result)
                 const user =result.user
                 if(user){
                     const uid = user.uid

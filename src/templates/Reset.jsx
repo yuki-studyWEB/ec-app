@@ -18,12 +18,12 @@ const Reset = () => {
             <h2 className="u-text__headline u-text-center">パスワードリセット</h2>
             <div className="module-spacer--medium" />
             <TextInput
-                fullWidth={true} label={"メールアドレス"} multiline={false} require={true}
+                fullWidth={true} label={"送信先メールアドレス"} multiline={false} require={true}
                 rows={1} value={email} type={"email"} onChange={inputEmail}
             />
             <div className="center">
                 <PrimaryButton
-                    label={"Reset Password"}
+                    label={"パスワードリセット"}
                     onClick={() => dispatch(resetPassword(email))}
                 />
                 <div className="module-spacer--medium" />

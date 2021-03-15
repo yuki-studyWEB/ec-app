@@ -1,6 +1,7 @@
 const initialState = {
     products:{
-        list:[]
+        list:[],
+        searchResult: []
     },
     users: {
         cart: [], //サブコレクション"cart""
@@ -9,7 +10,13 @@ const initialState = {
         orders: [],
         role: "",
         uid: "",
-        username: ""
+        email: "",
+        username: "",
+        fullName: "",
+        fullNameKana: "",
+        fullPostCode: "",
+        fulladdress: "",
+        tel: ""
     }
 }; //initialStateではアプリに必要なstateを全て記述しておくこと。
 

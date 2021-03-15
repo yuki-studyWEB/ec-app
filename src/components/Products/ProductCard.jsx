@@ -1,56 +1,99 @@
 import React,{useState, useCallback} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Typography from '@material-ui/core/Typography';
+import {Card, CardContent, CardMedia, Typography, IconButton, Menu, MenuItem} from '@material-ui/core';
 import NoImage from '../../assets/img/src/no_image.png'
 import {push} from 'connected-react-router';
 import {useDispatch, useSelector} from 'react-redux';
-import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 import MOreVertIcon from '@material-ui/icons/MoreVert';
 import {deleteProduct} from "../../reducks/products/operations";
 import {getUserId} from "../../reducks/users/selectors";
+import {FavoriteButtonInCard} from "./index";
 
 
 //themeを使うことでブレイクポイントや配色の設定が可能
 const useStyles = makeStyles ((theme) => ({
     root: {
-        [theme.breakpoints.down('sm')]: { //幅がsm(スマートフォン表示:576px)の幅以下の時
-            margin: 8,
-            width: 'calc(50% -16px)'
+        boxSizing: "border-box",
+        [theme.breakpoints.down('sm')]: {
+            margin: '8px auto',
+            width: 'calc(50% - 10px)',
+            border: '#ddd 1px solid'
         },
         [theme.breakpoints.up('sm')]: {
             margin: 16,
-            width: 'calc(33.3333% - 32px)'
-        }
+            width: 'calc(23% - 15px)'
+        },
+        borderRadius: 2
     },
     content: {
         display: 'flex',
         justifyContent: 'space-between',
-        padding: '16px 8px 16px 20px',
         textAlign: 'left',
         '&:last-child': {
-            paddingBottom: 16
-        } 
+            paddingBottom: 13
+        },
+        [theme.breakpoints.down('sm')]: {
+            padding: '10px 0 10px 12px'
+        },
+        [theme.breakpoints.up('sm')]: {
+            padding: '12px 8px 12px 20px'
+        }
+    },
+    contentText: {
+        
     },
     media: {
         height: 0,
         paddingTop: '100%',
+        cursor: 'pointer',
+        position: 'relative',
+        '&::before': {
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            content: '""',
+            display: 'block',
+            transition: "150ms ease"
+        },
+        '&:hover::before': {
+            backgroundColor: "rgba(250,250,250,0.3)"
+        }
+    },
+    itemName: {
+        color: theme.palette.ttl.dark,
+        cursor: 'pointer',
+        fontWeight: 600,
+        letterSpacing: 1.25,
+        overflow: 'hidden',
+        [theme.breakpoints.down('sm')]: {
+            height: '72%',
+            fontSize: 12.5,
+        },
+        [theme.breakpoints.up('sm')]: {
+            height: 52.5,
+            fontSize: 16.5
+        }
     },
     price: {
-        color: theme.palette.secondary.main,
-        fontSize: 16
+        [theme.breakpoints.down('sm')]: {
+            fontSize: 12.5
+        },
+        [theme.breakpoints.up('sm')]: {
+            fontSize: 16
+        }
+    },
+    morevert: {
+        color: theme.palette.secondary.contrastText
     }
 }));
 
 const ProductCard = (props) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const selector = useSelector((state) =>state)
-    const uid = getUserId(selector) 
+    const selector = useSelector((state) =>state);
+    const uid = getUserId(selector);
 
     const [anchorEl, setAnchorEl] = useState(null);
 
@@ -73,8 +116,11 @@ const ProductCard = (props) => {
                 onClick={() => dispatch(push('/product/' + props.id))}
             />
             <CardContent className={classes.content}>
-                <div onClick={() => dispatch(push('/product/' + props.id))}>
-                    <Typography color="textSecondary" component="p">
+                <div className={classes.contentText}>
+                    <Typography 
+                        className={classes.itemName}
+                        component="p" onClick={() => dispatch(push('/product/' + props.id))}
+                    >
                         {props.name}
                     </Typography>
                     <Typography className={classes.price} component="p">
@@ -83,7 +129,7 @@ const ProductCard = (props) => {
                 </div>
                 {props.creatorId === uid ? ( //商品の作者が一致していれば編集削除可能
                 <div>
-                    <IconButton onClick={handleClick}>
+                    <IconButton className={classes.morevert} onClick={handleClick}>
                         <MOreVertIcon />
                     </IconButton>
                     <Menu
@@ -112,7 +158,10 @@ const ProductCard = (props) => {
                 </div>
                 ) : (
                 <div>
-
+                    <FavoriteButtonInCard 
+                        id={props.id} images={props.images} 
+                        name={props.name} price={props.price} sellerName={props.username}
+                    />
                 </div>
                 )}
             </CardContent>

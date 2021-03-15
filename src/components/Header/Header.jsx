@@ -1,7 +1,6 @@
 import React,{useCallback, useState} from 'react';
-import {creatStyles, makeStyles} from "@material-ui/styles"
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
+import {makeStyles} from "@material-ui/styles"
+import {AppBar, Toolbar} from '@material-ui/core';
 import logo from '../../assets/img/icons/logo.png'
 import { useDispatch,useSelector } from 'react-redux';
 import { getIsSignedIn } from '../../reducks/users/selectors';

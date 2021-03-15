@@ -14,7 +14,7 @@ exports.onProductCreated = functions.firestore.document("products/{id}").onCreat
   data.objectID = context.params.id
   const index = client.initIndex(ALGOLIA_INDEX_NAME)
   return index.saveObject(data)
-})
+});
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //

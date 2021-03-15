@@ -1,8 +1,9 @@
 import React,{useCallback, useState} from 'react';
 import { useDispatch } from 'react-redux';
 import { TextInput,PrimaryButton } from '../components/UIkit';
-import {signUp} from '../reducks/users/operations'
-import {push} from 'connected-react-router'
+import {signUp} from '../reducks/users/operations';
+import {push} from 'connected-react-router';
+import '../assets/style.css'
 
 const SignUp = () => {
     const dispatch = useDispatch()
@@ -48,13 +49,16 @@ const SignUp = () => {
                 fullWidth={true} label={"パスワード(再確認)"} multiline={false} require={true}
                 rows={1} value={confirmPassword} type={"password"} onChange={inputConfirmPassword}
             />
+            <div className="module-spacer--extra-extra-small" />
             <div className="center">
                 <PrimaryButton
                     label={"アカウントを登録する"}
                     onClick={() => dispatch(signUp(username, email, password, confirmPassword))}
                 />
                 <div className="module-spacer--medium" />
-                <p onClick={()=>dispatch(push('/signin'))}>アカウントをお持ちの方はこちら</p>
+                <p onClick={()=>dispatch(push('/signin'))} className="textButton">
+                    アカウントをお持ちの方はこちら
+                </p>
             </div>
         </div>//このローカルで管理しているstate(username etc...)をdispatchでsignUpメソッドに渡す。
     )

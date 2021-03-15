@@ -1,10 +1,9 @@
-import React from 'react'
-import Divider from '@material-ui/core/Divider'
-import {TextDetail} from "../UIkit"
-import {OrderedProducts} from "./index"
+import React from 'react';
+import Divider from '@material-ui/core/Divider';
+import {TextDetail} from "../UIkit";
+import {OrderedProducts} from "./index";
 
 const datatimeToString = (date) =>{
-    console.log(date)
     return date.getFullYear() + '-'
     + ('00' + (date.getMonth()+1)).slice(-2) + '-' // ex.2月→002　.slice(-2)で最後から２番目以降を取得。getMonthは0~11を返すため+1する
     + ('00' + date.getDate()).slice(-2) + " "

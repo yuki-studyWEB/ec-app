@@ -38,8 +38,13 @@ const FavoriteList = () => {
         <section className="c-section-wrapin">
             <List className={classes.orderList}>
             <h2 className={classes.ttlOrderhistory}>お気に入り</h2>
-                {favorites.length > 0 && (
+                {favorites.length > 0 ? (
                     favorites.map(favorite => <FavoriteItem favorite={favorite} key={favorite.favoriteId} />)
+                ):(
+                <div>
+                    <div className="module-spacer--medium" />
+                    <p>現在お気に入りの登録がございません。</p>
+                </div>
                 )}
             </List>
         </section>

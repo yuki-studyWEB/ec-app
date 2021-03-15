@@ -28,19 +28,23 @@ const OrderHistory = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const selecotor = useSelector((state) => state);
-    const orders = getOrdersHistory(selecotor); //初期状態initialState（空）。useEffectでoperationを起動する。
+    const orders = getOrdersHistory(selecotor);
 
     useEffect(() =>{
         dispatch(fetchOrdersHistory())
-        //ordersHistory取得し、reduxのストアを書き換えると、selectorもその情報を自動取得しordersに代入してくれる。
     },[])
 
     return (
         <section className="c-section-wrapin">
             <List className={classes.orderList}>
             <h2 className={classes.ttlOrderhistory}>注文履歴</h2>
-                {orders.length > 0 && (
+                {orders.length > 0 ? (
                     orders.map(order => <OrderHistoryItem order={order} key={order.id} />)
+                ):(
+                <div>
+                    <div className="module-spacer--medium" />
+                    <p>注文履歴がございません。</p>
+                </div>
                 )}
             </List>
         </section>

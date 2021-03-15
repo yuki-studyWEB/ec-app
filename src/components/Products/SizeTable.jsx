@@ -1,10 +1,5 @@
-import React,{useEffect, useState} from 'react';
-import IconButton from "@material-ui/core/IconButton";
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableRow from '@material-ui/core/TableRow';
+import React from 'react';
+import {IconButton, Table, TableBody, TableCell, TableContainer, TableRow} from "@material-ui/core";
 import {makeStyles} from "@material-ui/styles";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 
@@ -41,7 +36,7 @@ const SizeTable = (props) => {
                                             <ShoppingCartIcon />
                                         </IconButton>
                                     ) : (
-                                        <div>売り切れ</div>
+                                        <div>売切れ</div>
                                     )}
                                 </TableCell>
                             </TableRow>

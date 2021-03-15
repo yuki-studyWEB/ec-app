@@ -20,6 +20,7 @@ const ProductEdit = () => {
          [gender, setGender] = useState(""),
          [images, setImages] = useState([]),
          [price, setPrice] = useState(""),
+         [keyword, setKeyword] = useState(""),
          [sizes, setSizes] = useState([]);
 
     //onChangeイベント
@@ -32,6 +33,9 @@ const ProductEdit = () => {
     const inputPrice = useCallback((event)=>{
        setPrice(event.target.value) 
     },[setPrice])
+    const inputKeyword = useCallback((event)=>{
+       setKeyword(event.target.value) 
+    },[setKeyword])
 
     const genders = [
         {id: "all", name: "全て"},
@@ -50,6 +54,7 @@ const ProductEdit = () => {
                     setCategory(data.category);
                     setGender(data.gender);
                     setPrice(data.price);
+                    setKeyword(data.keyword);
                     setSizes(data.sizes);
                 }) //setStateでstateを先ほど入手したdataに更新してあげる。
         }
@@ -96,13 +101,17 @@ const ProductEdit = () => {
                     fullWidth={true} label={"価格"} multiline={false} required={true}
                     onChange={inputPrice} rows={1} value={price} type={"number"}
                 />
+                <TextInput
+                    fullWidth={true} label={"検索キーワード（任意）"} multiline={false} required={false}
+                    onChange={inputKeyword} rows={1} value={keyword} type={"keyword"}
+                />
                 <div className="module-spacer--small" />
-                <SetSizeArea sizes={sizes} setSizes={setSizes}/>
+                <SetSizeArea sizes={sizes} setSizes={setSizes} category={category}/>
                 <div className="module-spacer--small" />
                 <div className="center">
                     <PrimaryButton
                         label={"商品状態を保存"}
-                        onClick={() => dispatch(saveProduct(id, name, description, category, gender, price, images, sizes))}
+                        onClick={() => dispatch(saveProduct(id, name, description, category, gender, price, images, keyword, sizes))}
                     />
                 </div>
             </div>

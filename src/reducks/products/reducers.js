@@ -10,6 +10,11 @@ export const ProductsReducer = (state = initialState.products, action) => {
                 ...state,
                 list: [...action.payload]
             };
+        case Actions.SEARCH_RESULT:
+            return{
+                ...state,
+                searchResult: [...action.payload]
+            };
         case Actions.FETCH_PRODUCTS:
             return{
                 ...state,

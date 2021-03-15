@@ -9,4 +9,8 @@ export {default as CartList} from './CartList'
 export {default as OrderConfirm} from './OrderConfirm'
 export {default as OrderHistory} from './OrderHistory'
 export {default as FavoriteList} from './FavoriteList'
+export {default as MyPage} from './MyPage'
+export {default as ChangeUserName} from './ChangeUserName'
+export {default as ChangeUserBaseData} from './ChangeUserBaseData'
+export {default as ChangeUserEmail} from './ChangeUserEmail'
 //エントリポイントを作る際、Default exportされたモジュールをそのままエクスポートしたいため{ default as Foo }の形にする。

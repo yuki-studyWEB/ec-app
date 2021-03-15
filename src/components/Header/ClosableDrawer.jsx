@@ -1,14 +1,9 @@
 import React,{useEffect,useState} from 'react';
 import {makeStyles} from '@material-ui/styles';
-import {useDispatch} from 'react-redux';
+import {useDispatch,useSelector} from 'react-redux';
 import {push} from 'connected-react-router';
-import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import IconButton from '@material-ui/core/IconButton';
+import {getUsername} from '../../reducks/users/selectors'
+import {Drawer, List, Divider, ListItem, ListItemIcon, ListItemText, IconButton} from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
@@ -34,18 +29,36 @@ const useStyles = makeStyles((theme)=>({
     },
     toolbar: theme.mixins.toolbar,
     drawerPaper: {
-        width: 256
+        [theme.breakpoints.up('sm')]: {
+            width: 256
+        },
+        [theme.breakpoints.down('sm')]: {
+            width: '64%'
+        }
     },
     searchField: {
         alignItems: 'center',
         display: 'flex',
-        marginLeft: 32
+        marginLeft: 20
+    },
+    userName: {
+        [theme.breakpoints.up('sm')]: {
+            display: 'none'
+        },
+        [theme.breakpoints.down('sm')]: {
+            display: 'block',
+            padding: '6px 2px 6px 20px',
+            backgroundColor: '#EFB',
+            fontSize: 14
+        }
     }
 }))
 
 const ClosableDrawer = (props) => {
     const classes = useStyles();
     const dispatch = useDispatch();
+    const seletor = useSelector((state)=>state);
+    const userName = getUsername(seletor)
     const {container} = props;
     const [searchResult, setSearchResult] = useState([])
 
@@ -61,6 +74,9 @@ const ClosableDrawer = (props) => {
 
     const confirmSearch = (event) => {
         if(event.key === "Enter"|| event.type === "click"){
+            if (window.location.pathname !== ""){
+                dispatch(push('/'))
+            }
             dispatch(reflectSearchResult(searchResult));
             props.onClose(event);
         }
@@ -117,9 +133,14 @@ const ClosableDrawer = (props) => {
                 onClose={(e) => props.onColse(e)}
                 onKeyDown={(e)=>props.onClose(e)}//e:KeyboardEvent
             >
+                <div className={classes.userName}>
+                    Welcome! {userName}
+                    
+                </div>
+                <Divider />
                 <div className={classes.searchField}>
                     <TextInput
-                        fullWidth={false} label={"キーワードを入力"} multiline={false}
+                        fullWidth={true} label={"キーワードを入力"} multiline={false}
                         onChange={onSearch} required={false} rows={1} type={"text"}
                         onKeyPress={(e) => confirmSearch(e)}
                     />
@@ -141,7 +162,7 @@ const ClosableDrawer = (props) => {
                         <ListItemIcon>
                             <ExitToAppIcon />
                         </ListItemIcon>
-                        <ListItemText primary={"Logout"} />
+                        <ListItemText primary={"ログアウト"} />
                     </ListItem>
                 </List>
                 <Divider />

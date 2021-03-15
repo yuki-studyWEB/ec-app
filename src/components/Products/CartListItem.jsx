@@ -1,11 +1,7 @@
 import React from 'react';
 import {makeStyles} from '@material-ui/styles';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import {Divider, IconButton, ListItem, ListItemText, ListItemAvatar} from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
-import IconButton from '@material-ui/core/IconButton';
 import {useSelector} from "react-redux";
 import {getUserId} from '../../reducks/users/selectors';
 import {db} from '../../firebase/index'
@@ -54,6 +50,9 @@ const CartListItem = (props) => {
                     />
                     <ListItemText 
                         primary={"¥" + price}
+                    />
+                    <ListItemText 
+                        primary={"出品者：" + props.product.sellerName}
                     />
                 </div>
                 <IconButton onClick={() => removeProductFormCart(props.product.cartId)}>

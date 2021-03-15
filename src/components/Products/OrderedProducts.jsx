@@ -1,9 +1,5 @@
 import React, { useCallback } from 'react'
-import List from "@material-ui/core/List"
-import ListItem from "@material-ui/core/ListItem"
-import ListItemAvatar from "@material-ui/core/ListItemAvatar"
-import ListItemText from "@material-ui/core/ListItemText"
-import Divider from "@material-ui/core/Divider"
+import {List, ListItem, ListItemAvatar, ListItemText, Divider} from "@material-ui/core"
 import {makeStyles} from "@material-ui/styles"
 import {PrimaryButton} from "../UIkit"
 import {useDispatch} from "react-redux"
@@ -55,6 +51,9 @@ const OrderedProducts = (props) =>{
                                 />
                                 <ListItemText 
                                     primary={product.price.toLocaleString()}
+                                />
+                                <ListItemText 
+                                    primary={'出品者：'+product.sellerName}
                                 />
                             </div>
                             <PrimaryButton

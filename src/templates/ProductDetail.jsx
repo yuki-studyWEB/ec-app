@@ -61,7 +61,7 @@ const ProductDetail = () => {
                 setProduct(data);
             })
     },[]);
-
+    
     const addProduct = useCallback((selectedSize) => {
         const timeStamp = FirebaseTimestamp.now();
         dispatch(addProductToCart({
@@ -73,7 +73,8 @@ const ProductDetail = () => {
             price: product.price,
             productId: product.id,
             quantity: 1,
-            size: selectedSize
+            size: selectedSize,
+            sellerName: product.creatorName
         }))
     },[product])//子コンポーネントに渡すときはuseCallbackでメモ化
     
@@ -93,10 +94,10 @@ const ProductDetail = () => {
                         <FavoriteButton 
                             id={id} images={product.images} 
                             name={product.name} price={product.price}
-                            productId={product.id}
                         />
                         <div className="module-spacer--small" />
                         <p>{returnCodeToBr(product.description)}</p>
+                        <p>出品者：{product.creatorName}</p>
                     </div>
                 </div>
             )}

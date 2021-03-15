@@ -7,7 +7,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import { getUserId,getFavoriteProducts } from '../../reducks/users/selectors';
 import {addFavoriteProduct} from "../../reducks/users/operations"
 
-const FavoriteButton = (props) => {
+const FavoriteButtonInCard = (props) => {
     const dispatch = useDispatch();
     const selector = useSelector((state) => state);
     const uid = getUserId(selector)
@@ -54,9 +54,8 @@ const FavoriteButton = (props) => {
                 }}
             />
         }
-        label={checked ? "お気に入りから外す":"お気に入りに追加する"}
         />
     )
 }
 
-export default FavoriteButton
+export default FavoriteButtonInCard;

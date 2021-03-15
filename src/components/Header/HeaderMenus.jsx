@@ -1,18 +1,33 @@
-import React,{useEffect,useState} from 'react';
-import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
+import React,{useEffect} from 'react';
+import {IconButton, Badge} from '@material-ui/core';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'; 
 import MenuIcon from '@material-ui/icons/Menu';
-import {getProductsInCart, getUserId, getFavoriteProducts} from "../../reducks/users/selectors";
+import {getProductsInCart, getUserId, getFavoriteProducts, getUsername} from "../../reducks/users/selectors";
 import {useSelector, useDispatch} from 'react-redux';
 import {db} from '../../firebase/index';
 import {fetchProductsInCart, fetchFavoriteProducts} from "../../reducks/users/operations";
 import {push} from 'connected-react-router';
+import {makeStyles} from '@material-ui/styles'
+
+const userStyles = makeStyles((theme)=>({
+    userName: {
+        display: 'inline-block',
+        marginRight: 10,
+        lineHeight: 1.5,
+        fontSize: 14,
+        verticalAlign: 'middle',
+        [theme.breakpoints.down('sm')]: {
+            display: 'none'
+        }
+    }
+}));
 
 const HeaderMenus = (props) => {
+    const classes = userStyles();
     const dispatch = useDispatch();
     const selector = useSelector((state) => state);
     const uid = getUserId(selector);
+    const userName = getUsername(selector);
     let productsInCart = getProductsInCart(selector);
     let userFavorites = getFavoriteProducts(selector);
 
@@ -73,6 +88,7 @@ const HeaderMenus = (props) => {
 
     return(
         <>
+            <p className={classes.userName} >{userName} 様</p>
             <IconButton onClick={() => dispatch(push('/cart'))}>
                 <Badge badgeContent={productsInCart.length} color="secondary">
                     <ShoppingCartIcon />

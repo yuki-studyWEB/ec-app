@@ -1,9 +1,8 @@
-import { GraphicEq } from '@material-ui/icons';
 import React,{useCallback, useState} from 'react';
 import { useDispatch } from 'react-redux';
 import { TextInput,PrimaryButton } from '../components/UIkit';
-import {signIn} from '../reducks/users/operations'
-import {push} from 'connected-react-router'
+import {signIn} from '../reducks/users/operations';
+import {push} from 'connected-react-router';
 
 const SignIn = () => {
     const dispatch = useDispatch()
@@ -31,14 +30,20 @@ const SignIn = () => {
                 fullWidth={true} label={"パスワード"} multiline={false} require={true}
                 rows={1} value={password} type={"password"} onChange={inputPassword}
             />
+            <div className="module-spacer--extra-extra-small" />
             <div className="center">
                 <PrimaryButton
-                    label={"SignIn"}
+                    label={"LOGIN"}
                     onClick={() => dispatch(signIn(email, password))}
                 />
                 <div className="module-spacer--medium" />
-                <p onClick={() => dispatch(push('/signup'))}>SignUp</p>
-                <p onClick={() => dispatch(push('/signin/reset'))}>パスワードをお忘れの方はこちら</p>
+                <p onClick={() => dispatch(push('/signup'))} className="textButton">
+                    アカウントを登録する
+                </p>
+                <div className="module-spacer--extra-extra-small" />
+                <p onClick={() => dispatch(push('/signin/reset')) } className="textButton">
+                    パスワードをお忘れの方はこちら
+                </p>
             </div>
         </div>//このローカルで管理しているstate(username etc...)をdispatchでsignUpメソッドに渡す。
     )

@@ -4,6 +4,11 @@ import {createSelector} from 'reselect';
 const userSelector = (state) => state.users;
 //sotreのusersのオブジェクトを取り出す
 
+export const getUserData = createSelector(
+    [userSelector],
+    state => state
+)
+
 export const getIsSignedIn = createSelector(
     [userSelector],
     state => state.isSignedIn
@@ -27,9 +32,12 @@ export const getProductsInCart = createSelector(
 export const getUserId = createSelector(
     [userSelector],
     state => state.uid
-) //第一引数[userSelector]で現在のusersの中身を取得し、第二引数stateがそれを引き継ぐ
-
+)
+export const getUserEmail = createSelector(
+    [userSelector],
+    state => state.email
+)
 export const getUsername = createSelector(
     [userSelector],
     state => state.username
-) //第一引数[userSelector]で現在のusersの中身を取得し、第二引数stateがそれを引き継ぐ
+)

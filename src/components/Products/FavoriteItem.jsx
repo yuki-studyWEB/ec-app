@@ -4,12 +4,10 @@ import {makeStyles} from "@material-ui/styles"
 import {PrimaryButton} from "../UIkit"
 import {useDispatch, useSelector} from "react-redux"
 import {push} from "connected-react-router"
-import Divider from "@material-ui/core/Divider"
-import IconButton from "@material-ui/core/IconButton"
+import {Divider, IconButton} from "@material-ui/core"
 import DeleteIcon from '@material-ui/icons/Delete';
 import {db} from '../../firebase/index';
 import {getUserId} from "../../reducks/users/selectors";
-import { fetchFavoriteProducts } from '../../reducks/users/operations';
 
 const useStyles = makeStyles((theme)=>({
     flexwrap: {
@@ -102,6 +100,7 @@ const FavoriteItem = (props) => {
                     <TextDetail label={"商品名"} value={favorite.name} />
                     <TextDetail label={"お気に入り登録日"} value={addDatetime} />
                     <TextDetail label={"金額"} value={price} />
+                    <TextDetail label={"出品者"} value={favorite.sellerName} />
                 </div>
             </div>
             <div className={classes.buttonWrap}>

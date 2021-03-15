@@ -20,6 +20,11 @@ export const UsersReducer = (state = initialState.users, action) => {
                 ...state,
                 cart:[...action.payload]
             }
+        case Actions.CHANGE_USER_DATA:
+            return{
+                ...state,
+                ...action.payload
+            }
         case Actions.SIGN_IN:
             return{
                 ...state,
