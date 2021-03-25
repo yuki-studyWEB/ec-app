@@ -35,34 +35,31 @@ const OrderedProducts = (props) =>{
             {Object.keys(products).map(key => {
                 const product = products[key]
                 return(
-                    <>
-                        <ListItem className={classes.list} key={product.id}>
-                            <ListItemAvatar>
-                                <img 
-                                    className={classes.image}
-                                    src={product.images[0].path}
-                                    alt="Orderd Product"
-                                />
-                            </ListItemAvatar>
-                            <div className={classes.text}>
-                                <ListItemText 
-                                    primary={product.name}
-                                    secondary={"サイズ： " + product.size}
-                                />
-                                <ListItemText 
-                                    primary={product.price.toLocaleString()}
-                                />
-                                <ListItemText 
-                                    primary={'出品者：'+product.sellerName}
-                                />
-                            </div>
-                            <PrimaryButton
-                                label={"商品を見る"}
-                                onClick={() => goToProductDetail(product.id)}
+                    <ListItem className={classes.list} key={product.id}>
+                        <ListItemAvatar>
+                            <img 
+                                className={classes.image}
+                                src={product.images[0].path}
+                                alt="Orderd Product"
                             />
-                        </ListItem>
-                        <Divider />
-                    </>
+                        </ListItemAvatar>
+                        <div className={classes.text}>
+                            <ListItemText 
+                                primary={product.name}
+                                secondary={"サイズ： " + product.size}
+                            />
+                            <ListItemText 
+                                primary={product.price.toLocaleString()}
+                            />
+                            <ListItemText 
+                                primary={'出品者：'+product.sellerName}
+                            />
+                        </div>
+                        <PrimaryButton
+                            label={"商品を見る"}
+                            onClick={() => goToProductDetail(product.id)}
+                        />
+                    </ListItem>
                 )}
             )}
         </List>

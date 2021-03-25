@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react';
 import { useSelector,useDispatch } from 'react-redux';
 import { db,FirebaseTimestamp } from '../../firebase/index';
-import {Checkbox, FormControlLabel} from '@material-ui/core';
+import {Checkbox} from '@material-ui/core';
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { getUserId,getFavoriteProducts } from '../../reducks/users/selectors';
@@ -30,7 +30,8 @@ const FavoriteButtonInCard = (props) => {
                 images: props.images,
                 name: props.name,
                 price: props.price,
-                productId: props.id
+                productId: props.id,
+                sellerName: props.sellerName
             }))
         } else {
             if(checkFavo.length > 0){
@@ -42,18 +43,13 @@ const FavoriteButtonInCard = (props) => {
     };
 
     return(
-        <FormControlLabel
-        control={
-            <Checkbox
-                icon={<FavoriteBorderIcon />}
-                checkedIcon={<FavoriteIcon />}
-                onChange={e => handleChange(e)}
-                checked={checked}
-                style={{
-                    color:"#ed052d"
-                }}
-            />
-        }
+        <Checkbox
+            icon={<FavoriteBorderIcon />}
+            checkedIcon={<FavoriteIcon />}
+            onChange={e => handleChange(e)}
+            checked={checked}
+            disabled={props.disabled}
+            className={props.className}
         />
     )
 }

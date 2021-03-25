@@ -1,19 +1,26 @@
 import React,{useEffect,useState,useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import { getUserData,getUserId } from '../reducks/users/selectors';
-import {makeStyles} from "@material-ui/styles";
+import {makeStyles,withStyles} from "@material-ui/styles";
 import {Table, TableBody, TableCell, TableContainer, TableRow, Button} from '@material-ui/core';
 import {push} from 'connected-react-router';
 import { db } from '../firebase';
-import {FormDialog} from '../components/UIkit'
+import {FormDialog,TableButton,PrimaryButton} from '../components/UIkit'
 
 const useStyles = makeStyles((theme) => ({
-    mypageWrapin: {
-        maxWidth: 700,
-        margin: "70px auto 0"
-    },
+    // mypageWrapin: {
+    //     maxWidth: 700,
+    //     margin: "70px auto 0",
+    //     [theme.breakpoints.down('sm')]: {
+    //         margin: "40px 15px 0"
+    //     }
+    // },
     th:{
-        width: '22%'
+        width: '22%',
+        [theme.breakpoints.down('sm')]: {
+            width: '100%',
+            display: 'block'
+        }
     },
     basedata:{
         lineHeight: 1.7
@@ -59,9 +66,10 @@ const MyPage = () => {
     },[uid])
 
     return(
-        <section className={classes.mypageWrapin}>
-        <span className="u-text-large">Mypage（登録者情報）</span>
+        <section className="mypage-wrapin">
+        <span className="u-text-large">マイページ</span>
         <div className="module-spacer--extra-small" />
+        <p className="center"><span className="u-text-middle">登録者情報</span></p>
         <TableContainer>
             <Table>
                 <TableBody>
@@ -73,12 +81,11 @@ const MyPage = () => {
                             <p>{users.username}</p>
                         </TableCell>
                         <TableCell className={classes.button}>
-                            <Button 
-                                variant="contained" color="secondary"
+                            <TableButton 
+                                label={"変更"}
                                 onClick={e =>dispatch(push('/user/mypage/username'))}
                             >
-                            変更
-                            </Button>
+                            </TableButton>
                         </TableCell>
                     </TableRow>
 
@@ -100,12 +107,11 @@ const MyPage = () => {
                             )}
                         </TableCell>
                         <TableCell className={classes.button}>
-                            <Button 
-                                variant="contained" color="secondary"
+                            <TableButton 
+                                label={"変更"}
                                 onClick={e =>dispatch(push('/user/mypage/userbasedata'))}
                             >
-                            変更
-                            </Button>
+                            </TableButton>
                         </TableCell>
                     </TableRow>
 
@@ -117,12 +123,11 @@ const MyPage = () => {
                             {users.email}
                         </TableCell>
                         <TableCell className={classes.button}>
-                            <Button 
-                                variant="contained" color="secondary"
+                            <TableButton 
+                                label={"変更"}
                                 onClick={e =>dispatch(push('/user/mypage/useremail'))}
                             >
-                            変更
-                            </Button>
+                            </TableButton>
                         </TableCell>
                     </TableRow>
 
@@ -134,20 +139,26 @@ const MyPage = () => {
 
                         </TableCell>
                         <TableCell className={classes.button}>
-                            <Button 
-                                variant="contained" color="secondary"
-                                onClick={e =>dispatch(push('/signin/reset'))}
+                            <TableButton 
+                                label={"リセット"}
+                                onClick={e =>dispatch(push('/signin/reset' + '?id=resetpw'))}
                             >
-                            リセット
-                            </Button>
+                            </TableButton>
                         </TableCell>
                     </TableRow>
                 </TableBody>
             </Table>
         </TableContainer>
-        <div className="module-spacer--extra-small" />
+        <div className="module-spacer--medium" />
+        <div className="center">
+            <PrimaryButton 
+                label={"出品した商品を確認する"}
+                onClick={e => dispatch(push('/#myproducts'))}
+            />
+        </div>
+        <div className="module-spacer--medium" />
         <p onClick={handleClickOpen} className="textButton">
-            お問い合わせ
+            お問い合わせはこちら
         </p>
         <FormDialog open={open} handleClose={handleClose}/>
         </section>

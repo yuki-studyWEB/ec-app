@@ -5,7 +5,8 @@ import {resetPassword} from '../reducks/users/operations'
 import {push} from 'connected-react-router'
 
 const Reset = () => {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+    const URLparam = window.location.search.substring(4);
 
     const [email, setEmail] = useState("");
 
@@ -27,7 +28,11 @@ const Reset = () => {
                     onClick={() => dispatch(resetPassword(email))}
                 />
                 <div className="module-spacer--medium" />
-                <p onClick={()=>dispatch(push('/signin'))}>ログイン画面に戻る</p>
+                {URLparam === "resetpw" ? (
+                    <p className="textButton" onClick={()=>dispatch(push('/user/mypage'))}>マイページに戻る</p>
+                ):(
+                    <p className="textButton" onClick={()=>dispatch(push('/signin'))}>ログイン画面に戻る</p>
+                )}
             </div>
         </div>//このローカルで管理しているstate(username etc...)をdispatchでsignUpメソッドに渡す。
     )

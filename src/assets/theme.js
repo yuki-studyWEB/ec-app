@@ -12,17 +12,24 @@ export const theme = createMuiTheme({
       xl: 1920,
     },
   },
+  overrides: {
+    MuiBackdrop: {
+      root: {
+        backgroundColor: 'none'
+      }
+    }
+  },
   palette: {
     primary: {
-      light: '#88ffff',
-      main: '#4dd0e1',
-      dark: '#028f9c',
+      light: '#ffcd38',
+      main: '#ffc107',
+      dark: '#b28704',
       contrastText: '#000',
     },
     secondary: {
-      light: '#ffff81',
-      main: '#ffd54f',
-      dark: '#c8a415',
+      light: '#e33371',
+      main: '#dc004e',
+      dark: '#9a0036',
       contrastText: '#000',
     },
     grey: {
@@ -41,10 +48,16 @@ export const theme = createMuiTheme({
       A400: "#303030",
       A700: "#616161"
     },
-    red: {
-      light: '#fa2045',
-      main: '#ed052d',
-      dark: '#d6062a',
+    info: {
+      light: '#64b5f6',
+      main: '#2196f3',
+      dark: '#1976d2',
+      contrastText: '#000',
+    },
+    success: {
+      light: '#81c784',
+      main: '#4caf50',
+      dark: '#388e3c',
       contrastText: '#000',
     },
     ttl: {

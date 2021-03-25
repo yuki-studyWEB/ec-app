@@ -30,7 +30,8 @@ const FavoriteButton = (props) => {
                 images: props.images,
                 name: props.name,
                 price: props.price,
-                productId: props.id
+                productId: props.id,
+                sellerName: props.sellerName
             }))
         } else {
             if(checkFavo.length > 0){
@@ -45,13 +46,12 @@ const FavoriteButton = (props) => {
         <FormControlLabel
         control={
             <Checkbox
+                disabled={props.disabled}
                 icon={<FavoriteBorderIcon />}
                 checkedIcon={<FavoriteIcon />}
                 onChange={e => handleChange(e)}
                 checked={checked}
-                style={{
-                    color:"#ed052d"
-                }}
+                color="secondary"
             />
         }
         label={checked ? "お気に入りから外す":"お気に入りに追加する"}

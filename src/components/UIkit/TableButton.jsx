@@ -9,14 +9,14 @@ const useStyles = makeStyles({
         fontSie: 16,
         height: 48,
         marginTop:16,
-        width:256,
+        width:145,
         '&:hover': {
             backgroundColor: "#45bbcb",
         }
     }
 })
 
-const PrimaryButton = (props) => {
+const TableButton = (props) => {
     const classes = useStyles();
 
     return(
@@ -26,4 +26,4 @@ const PrimaryButton = (props) => {
     )
 }
 
-export default PrimaryButton
+export default TableButton

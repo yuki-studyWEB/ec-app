@@ -22,17 +22,17 @@ const SizeTable = (props) => {
             <Table>
                 <TableBody>
                     {sizes.length > 0 &&(
-                        sizes.map((size,index) =>(
-                            <TableRow key={index}>
+                        sizes.map((item,index) =>(
+                            <TableRow key={item.size}>
                                 <TableCell component="th" scope="row">
-                                    {size.size}
+                                    {item.size}
                                 </TableCell>
                                 <TableCell>
-                                    残り{size.quantity}点
+                                    残り{item.quantity}点
                                 </TableCell>
                                 <TableCell　className={classes.iconCell}>
-                                    {size.quantity > 0 ?(
-                                        <IconButton onClick={() => props.addProduct(size.size)}>
+                                    {item.quantity > 0 ?(
+                                        <IconButton disabled={props.myItem} onClick={() => props.addProduct(item.size)}>
                                             <ShoppingCartIcon />
                                         </IconButton>
                                     ) : (

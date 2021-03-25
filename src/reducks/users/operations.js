@@ -16,7 +16,6 @@ export const addProductToCart = (addedProduct) => {
 export const addFavoriteProduct = (addedProduct) => {
     return async (dispatch,getState) => {
         const uid = getState().users.uid;
-        console.log(uid)
         const favoRef = db.collection('users').doc(uid).collection('favorites').doc(); //サブコレクションusers/{id}/favorites/{id}
         addedProduct['favoriteId'] = favoRef.id; //今回追加するデータの中にuserのサブコレクションのIDをフィールドとして追加
         await favoRef.set(addedProduct);

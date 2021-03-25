@@ -44,7 +44,7 @@ const ChangeUserEmail = () => {
                     onClick={() => dispatch(changeUserEmail(userEmail, password))}
                 />
                 <div className="module-spacer--medium" />
-                <p onClick={()=>dispatch(push('/user/maypage'))} className="textButton">
+                <p onClick={()=>dispatch(push('/user/mypage'))} className="textButton">
                     変更せず戻る
                 </p>
             </div>

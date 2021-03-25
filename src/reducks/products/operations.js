@@ -1,6 +1,7 @@
 import { db, FirebaseTimestamp } from "../../firebase"
 import {push} from 'connected-react-router'
-import {fetchProductsAction, deleteProductAction, searchResultAction} from './actions'
+import {fetchProductsAction, deleteProductAction, searchResultAction, resetSearchResultAction} from './actions'
+import ProductList from "../../templates/ProductList";
 const algoliasearch = require("algoliasearch");
 const client = algoliasearch(
   process.env.REACT_APP_ALGOLIA_ID,
@@ -22,6 +23,12 @@ export const deleteProduct = (id) => {
             
         });
     }
+}
+export const resetSearchResult = () => {
+    return async (dispatch) => {
+            const resetresult = []
+            dispatch(resetSearchResultAction(resetresult))            
+        };
 }
 
 export const orderProduct = (productsInCart, amount) =>{
@@ -110,29 +117,78 @@ export const reflectSearchResult = (tempResults) => {
         searchResults.forEach(result =>{
             productList.push(result)
         })
-        console.log(productList)
         dispatch(searchResultAction(productList))
     }
 }
 
-export const fetchProducts = (gender, category) => {
+export const fetchProducts = (gender, category, price, hash) => {
     return async (dispatch, getState) => {
-        const searchResults = getState().products.searchResult
-        console.log(searchResults);
-        let query = productsRef.orderBy('updated_at','desc');
-        query = (gender !== "") ? query.where('gender','==',gender) : query;
-        query = (category !== "") ? query.where('category', '==', category) : query;
-
-        query.get()//クエリの種類、自動でソートしてくれる。更新日付が新しい順で並び替えて取得。
-            .then(snapshots => {
-                const productList = []
-                snapshots.forEach(snapshot => {
-                    const product = snapshot.data();
-                    productList.push(product)
+        if(hash === 'myproducts'){
+            //ユーザーが出品した商品だけに絞る処理
+            const uid = getState().users.uid;
+            const query = await productsRef.orderBy('updated_at','desc');
+            query.where('creatorId','==',uid).get()
+                .then(snapshots =>{
+                    const productList = [];
+                    snapshots.forEach(snapshot =>{
+                        const product = snapshot.data();
+                        productList.push(product)
+                    })
+                    dispatch(fetchProductsAction(productList))
                 })
-                const complete = searchResults.concat(productList);
-                dispatch(fetchProductsAction(complete));
-        })
+            
+        } else {
+            const searchResults = getState().products.searchResult;
+            
+            let query = {};
+            if(searchResults.length > 0){
+             // キーワード検索も実行していた場合の処理
+                query = searchResults.sort((a,b)=>{
+                    return a.updated_at - b.updated_at;
+                });
+                let genderitems = 
+                    query.filter((item,index) =>{
+                        if(item.gender === gender) return true;
+                    })
+                let categoryitems = 
+                    query.filter((item,index) =>{
+                        if(item.category === category) return true;
+                    })
+                let priceitems = 
+                    query.filter((item,index) =>{
+                        if(item.price >= parseInt(price[0]) && item.price <= parseInt(price[1])) return true;
+                    })
+                if(gender || category || price){
+                    const productList = genderitems.concat(categoryitems,priceitems);
+                    dispatch(fetchProductsAction(productList));
+                } else {
+                    dispatch(fetchProductsAction(query));
+                }
+            }else{
+             // キーワード検索なし
+                query = productsRef.orderBy('updated_at', 'desc');
+                query = (gender !== "") ? query.where('gender','==',gender) : query;
+                query = (category !== "") ? query.where('category', '==', category) : query;
+                await query.get()//クエリの種類、自動でソートしてくれる。更新日付が新しい順で並び替えて取得。
+                    .then(snapshots => {
+                        const productList = []
+                        snapshots.forEach(snapshot => {
+                            const product = snapshot.data();
+                            productList.push(product)
+                        })
+                        
+                        if(price.length > 1){
+                            //金額の指定も入っていた場合
+                            let newProductList = productList.filter((item,index) =>{
+                                if(item.price >= parseInt(price[0]) && item.price <= parseInt(price[1])) return true;
+                            })
+                            dispatch(fetchProductsAction(newProductList));
+                        }else{
+                            dispatch(fetchProductsAction(productList));
+                        }
+                })
+            }
+        }
     }
 }
 

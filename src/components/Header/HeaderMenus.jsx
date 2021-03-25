@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react';
+import React,{useEffect,useState} from 'react';
 import {IconButton, Badge} from '@material-ui/core';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'; 
 import MenuIcon from '@material-ui/icons/Menu';
@@ -6,6 +6,7 @@ import {getProductsInCart, getUserId, getFavoriteProducts, getUsername} from "..
 import {useSelector, useDispatch} from 'react-redux';
 import {db} from '../../firebase/index';
 import {fetchProductsInCart, fetchFavoriteProducts} from "../../reducks/users/operations";
+import {resetSearchResult} from '../../reducks/products/operations';
 import {push} from 'connected-react-router';
 import {makeStyles} from '@material-ui/styles'
 
@@ -21,7 +22,6 @@ const userStyles = makeStyles((theme)=>({
         }
     }
 }));
-
 const HeaderMenus = (props) => {
     const classes = userStyles();
     const dispatch = useDispatch();
@@ -86,11 +86,17 @@ const HeaderMenus = (props) => {
             return () =>unsubscribe()
     },[])
 
+    const goToCart = () => {
+        props.setReset(props.reset + 1)
+        dispatch(resetSearchResult())
+        dispatch(push('/cart'))
+    }
+
     return(
         <>
             <p className={classes.userName} >{userName} 様</p>
-            <IconButton onClick={() => dispatch(push('/cart'))}>
-                <Badge badgeContent={productsInCart.length} color="secondary">
+            <IconButton onClick={goToCart}>
+                <Badge badgeContent={productsInCart.length} color="primary">
                     <ShoppingCartIcon />
                 </Badge>
             </IconButton>

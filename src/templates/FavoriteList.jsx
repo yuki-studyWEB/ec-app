@@ -8,7 +8,7 @@ import { FavoriteItem } from '../components/Products';
 
 const useStyles = makeStyles((theme) =>({
     orderList: {
-        background: theme.palette.red["100"],
+        background: theme.palette.primary,
         margin: '0 auto',
         padding: 32,
         [theme.breakpoints.down('md')]: {

@@ -6,6 +6,7 @@ import { useDispatch,useSelector } from 'react-redux';
 import { getIsSignedIn } from '../../reducks/users/selectors';
 import {push} from 'connected-react-router';
 import {HeaderMenus, ClosableDrawer} from './index';
+import {resetSearchResult} from '../../reducks/products/operations';
 
 const useStyles = makeStyles({
     root: {
@@ -37,6 +38,7 @@ const Header = () => {
     const isSignedIn = getIsSignedIn(selector);
 
     const [open, setOpen] = useState(false);
+    const [reset, setReset] = useState(0);
 
     const handleDrawerToggle = useCallback((event) =>{
         if (event.type ==='keydown' || (event.key ==='Tab'|| event.key ==='Shift')){
@@ -45,22 +47,28 @@ const Header = () => {
         setOpen(!open)
     },[setOpen, open]);
 
+    const resetData = () =>{
+        setReset(reset　+　1);
+        dispatch(resetSearchResult())
+        dispatch(push("/"))
+    }
+
     return(
-        <div className={classes.root}>
+        <div key={reset} className={classes.root}>
             <AppBar position="fixed" className={classes.menuBar}>
                 <Toolbar className={classes.toolBar}>
                     <img 
                     src={logo} alt="Logo" className={classes.logo}
-                    onClick={()=> dispatch(push("/"))}
+                    onClick={resetData}
                     />
                     {isSignedIn && (
                         <div className={classes.iconButtons}>
-                            <HeaderMenus handleDrawerToggle={handleDrawerToggle}/>
+                            <HeaderMenus reset={reset} setReset={setReset} handleDrawerToggle={handleDrawerToggle}/>
                         </div>
                     )}
                 </Toolbar>
             </AppBar>
-            <ClosableDrawer open={open} onClose={handleDrawerToggle} />
+            <ClosableDrawer reset={reset} setReset={setReset} open={open} onClose={handleDrawerToggle} />
         </div>
     )
 

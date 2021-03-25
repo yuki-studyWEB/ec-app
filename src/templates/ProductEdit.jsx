@@ -2,12 +2,14 @@ import React,{useCallback,useState, useEffect} from 'react'
 import { TextInput, SelectBox,PrimaryButton } from '../components/UIkit';
 import {ImageArea,SetSizeArea} from '../components/Products/';
 import {useDispatch} from 'react-redux';
-import {saveProduct} from '../reducks/products/operations'
-import {db} from "../firebase/index"
+import {saveProduct} from '../reducks/products/operations';
+import {push} from 'connected-react-router';
+import {db} from "../firebase/index";
 
 const ProductEdit = () => {
     const dispatch = useDispatch();
-    let id = window.location.pathname.split('/product/edit')[1];
+    let id = window.location.pathname.split('/edit')[1];
+    const URLparam = window.location.search;
     // 0:"",1"id" split()[1] 1を返す
     if(id !== ""){
         id = id.split('/')[1]
@@ -113,6 +115,10 @@ const ProductEdit = () => {
                         label={"商品状態を保存"}
                         onClick={() => dispatch(saveProduct(id, name, description, category, gender, price, images, keyword, sizes))}
                     />
+                    <div className="module-spacer--small" />
+                    <p onClick={() => dispatch(push('/' + URLparam)) } className="textButton">
+                        買い物に戻る
+                    </p>
                 </div>
             </div>
         </section>

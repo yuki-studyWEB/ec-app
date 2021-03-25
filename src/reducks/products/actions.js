@@ -21,3 +21,10 @@ export const searchResultAction = (results) => {
         payload: results
     }
 };
+export const RESET_SEARCH = "RESET_SEARCH";
+export const resetSearchResultAction = (results) => {
+    return {
+        type: "RESET_SEARCH",
+        payload: results
+    }
+};

@@ -39,9 +39,6 @@ const useStyles = makeStyles ((theme) => ({
             padding: '12px 8px 12px 20px'
         }
     },
-    contentText: {
-        
-    },
     media: {
         height: 0,
         paddingTop: '100%',
@@ -63,7 +60,6 @@ const useStyles = makeStyles ((theme) => ({
     },
     itemName: {
         color: theme.palette.ttl.dark,
-        cursor: 'pointer',
         fontWeight: 600,
         letterSpacing: 1.25,
         overflow: 'hidden',
@@ -86,6 +82,9 @@ const useStyles = makeStyles ((theme) => ({
     },
     morevert: {
         color: theme.palette.secondary.contrastText
+    },
+    favorite: {
+        marginRight: 0
     }
 }));
 
@@ -113,13 +112,13 @@ const ProductCard = (props) => {
                 className={classes.media}
                 image={images[0].path} //imagesの一番頭の画像を展示
                 title=""
-                onClick={() => dispatch(push('/product/' + props.id))}
+                onClick={() => dispatch(push('/product/' + props.id + '/?' + props.URLparam))}
             />
             <CardContent className={classes.content}>
                 <div className={classes.contentText}>
                     <Typography 
                         className={classes.itemName}
-                        component="p" onClick={() => dispatch(push('/product/' + props.id))}
+                        component="p"
                     >
                         {props.name}
                     </Typography>
@@ -140,7 +139,7 @@ const ProductCard = (props) => {
                     >
                         <MenuItem
                             onClick={() => {
-                                dispatch(push('/product/edit/' + props.id))
+                                dispatch(push('/edit/' + props.id + '/?' + props.URLparam))
                                 handleClose()
                             }}
                         >
@@ -159,8 +158,8 @@ const ProductCard = (props) => {
                 ) : (
                 <div>
                     <FavoriteButtonInCard 
-                        id={props.id} images={props.images} 
-                        name={props.name} price={props.price} sellerName={props.username}
+                        id={props.id} images={props.images}
+                        name={props.name} price={props.price} sellerName={props.sellerName}
                     />
                 </div>
                 )}

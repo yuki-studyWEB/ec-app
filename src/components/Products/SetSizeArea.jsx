@@ -1,23 +1,40 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {TextInput} from "../UIkit";
+import { Container, Draggable } from 'react-smooth-dnd';
+import arrayMove from 'array-move';
+import DragHandleIcon from '@material-ui/icons/DragHandle';
+import {TextInput, SelectSizeBox} from "../UIkit";
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import {Checkbox, FormControlLabel, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from "@material-ui/core";
 import {makeStyles} from "@material-ui/styles";
-import { SelectSizeBox } from '../UIkit';
 
 const useStyles = makeStyles((theme)=>({
     checkIcon: {
         float: 'right'
     },
+    tableCell: {
+        padding: 0,
+        width: '25%',
+        height: 35,
+        textAlign: 'center'
+    },
     iconCell: {
         padding: 0,
-        width: 48,
-        height: 48
+        width: 35,
+        height: 35
     },
     boxMargin: {
-        padding: '0 15px'
+        padding: '0 10px'
+    },
+    tableHead: {
+        borderBottom: '1px #333 solid'
+    },
+    cell_long: {
+        width: '20%'
+    },
+    cell_short: {
+        width: '20%'
     },
     others: {
         width: '30%',
@@ -39,9 +56,9 @@ const SetSizeArea = (props) => {
     const [index, setIndex] = useState(0),
           [size, setSize] = useState(""),
           [checked, setChecked] = useState(false),
-          [quantity, setQuantity] = useState(0);
+          [quantity, setQuantity] = useState(1);
     const sizeList = [];
-    console.log(sizeList)
+
     switch(props.category){
         case "shoes":
         for(let i=22; i < 29.5; i+=0.5){
@@ -57,13 +74,15 @@ const SetSizeArea = (props) => {
         sizeList.push('SS','S','M','L','LL');
         break;
     }
-    console.log(sizeList)
+
     //onChangeイベント ...値が変更された時
     const inputSize = useCallback((event) =>{
         setSize(event.target.value)
     },[setSize]);
     const inputQuantity = useCallback((event) =>{
-        setQuantity(event.target.value)
+        if(/^[1-9][0-9]*/.test(event.target.value)){
+            setQuantity(event.target.value)
+        }
     },[setQuantity]);
 
     const addSize = (index, size, quantity) =>{
@@ -107,45 +126,58 @@ const SetSizeArea = (props) => {
         
     };
 
+    const onDrop = ({ removedIndex, addedIndex }) => {
+        props.setSizes(items => arrayMove(items, removedIndex, addedIndex))
+    };
+
     useEffect(() => {
         setIndex(props.sizes.length)
     },[props.sizes.length]);
     //編集の場合、既にsizesの配列があるため、それを反映する処理
     //useMemoは関数の結果を保持
-
     return(
         <div>
             <TableContainer className={classes.boxMargin} component={Paper}>
                 <Table>
-                    <TableHead>
+                    <TableHead className={classes.tableHead}>
                         <TableRow>
-                            <TableCell>サイズ</TableCell>
-                            <TableCell>数量</TableCell>
-                            <TableCell className={classes.iconCell} />
-                            <TableCell className={classes.iconCell} />
+                            <TableCell>SizeTable</TableCell>
                         </TableRow>
                     </TableHead>
-                    <TableBody>
-                        {props.sizes.length > 0 &&(
-                            props.sizes.map((item,i) => (
-                                <TableRow key={item.size}>
-                                    <TableCell>{item.size}</TableCell>
-                                    <TableCell>{item.quantity}</TableCell>
-                                    <TableCell>
+                </Table>
+                    {props.sizes.length > 0 &&(
+                        <Container dragHandleSelector=".drag-handle" lockAxis="y" onDrop={onDrop}>
+                        {props.sizes.map((item,i) => (
+                            <Draggable key={item.size}>
+                            <Table>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell className="drag-handle">
+                                            <DragHandleIcon />
+                                    </TableCell>
+                                    <TableCell className={classes.tableCell}>
+                                        {item.size}
+                                    </TableCell>
+                                    <TableCell className={classes.tableCell}>
+                                        {item.quantity}
+                                    </TableCell>
+                                    <TableCell className={classes.tableCell}>
                                         <IconButton className={classes.iconCell} onClick={() => editSize(i, item.size, item.quantity)}>
                                             <EditIcon />
                                         </IconButton>
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell className={classes.tableCell}>
                                         <IconButton className={classes.iconCell} onClick={() => deleteSize(i)}>
                                             <DeleteIcon />
                                         </IconButton>
                                     </TableCell>
                                 </TableRow>
-                            ))
-                        )}
-                    </TableBody>
-                </Table>
+                            </TableBody>
+                            </Table>
+                            </Draggable>
+                        ))}
+                        </Container>
+                    )}
                 <div>
                     {checked ? (
                         <TextInput

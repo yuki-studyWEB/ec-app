@@ -27,7 +27,6 @@ const ChangeUserBaseData = () => {
                     const fullNameKana = data.fullNameKana.split("　");
                     const fullPostCode = data.fullPostCode.split("-");
                     const fulladdress = data.fulladdress.split("　");
-                    console.log(fulladdress)
                     setUserData({
                         ...userData,
                         lastName: fullName[0],

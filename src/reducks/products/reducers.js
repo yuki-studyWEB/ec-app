@@ -11,15 +11,24 @@ export const ProductsReducer = (state = initialState.products, action) => {
                 list: [...action.payload]
             };
         case Actions.SEARCH_RESULT:
+            state.searchResult = [];
             return{
                 ...state,
                 searchResult: [...action.payload]
             };
         case Actions.FETCH_PRODUCTS:
+            state.list = [];
+            if(state.list.length === 0){
+                return{
+                    ...state,
+                    list: action.payload
+                };
+            }
+            case Actions.RESET_SEARCH:
             return{
                 ...state,
-                list: [...action.payload]
-            };//action.payloadの配列をさらにまた配列にすることで現在のstateに新しい配列として受け入れてもらえる。
+                searchResult: action.payload
+            };
             default:
             return state
     }
