@@ -54,7 +54,7 @@ const Header = () => {
     }
 
     return(
-        <div key={reset} className={classes.root}>
+        <div className={classes.root}>
             <AppBar position="fixed" className={classes.menuBar}>
                 <Toolbar className={classes.toolBar}>
                     <img 
@@ -63,12 +63,18 @@ const Header = () => {
                     />
                     {isSignedIn && (
                         <div className={classes.iconButtons}>
-                            <HeaderMenus reset={reset} setReset={setReset} handleDrawerToggle={handleDrawerToggle}/>
+                            <HeaderMenus 
+                                reset={reset} setReset={setReset} 
+                                handleDrawerToggle={handleDrawerToggle}
+                            />
                         </div>
                     )}
                 </Toolbar>
             </AppBar>
-            <ClosableDrawer reset={reset} setReset={setReset} open={open} onClose={handleDrawerToggle} />
+            <ClosableDrawer 
+                key={reset} reset={reset} 
+                setReset={setReset} open={open} onClose={handleDrawerToggle}
+            />
         </div>
     )
 

@@ -3,7 +3,7 @@ import {makeStyles} from '@material-ui/styles';
 import {useDispatch,useSelector} from 'react-redux';
 import {push} from 'connected-react-router';
 import {getUsername} from '../../reducks/users/selectors'
-import {Drawer, List, Divider, ListItem, ListItemIcon, ListItemText, IconButton,Slider,Typography} from '@material-ui/core';
+import {Button, Drawer, List, Divider, ListItem, ListItemIcon, ListItemText, IconButton,Slider,Typography} from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
@@ -92,32 +92,36 @@ const ClosableDrawer = (props) => {
     const setParams = (path,newParams) => {
         switch(newParams.length){
             case 2:
-            return '/?' + newParams[0] + '&' + newParams[1] + '&' + path.split('/?')[1];
+                return '/?' + newParams[0] + '&' + newParams[1] + '&' + path.split('/?')[1];
             case 1:
-            return '/?' + newParams + '&' + path.split('/?')[1];
+                return '/?' + newParams + '&' + path.split('/?')[1];
             default:
-            break;
+                return '/?' + path.split('/?')[1];
         }
     }
     const resetParams = (newParams) => {
         //"すべて"がセレクトされたときの処理
         switch(newParams.length){
             case 2:
-            return '/?' + newParams[0] + '&' + newParams[1];
+                return '/?' + newParams[0] + '&' + newParams[1];
             case 1:
-            return '/?' + newParams;
+                return '/?' + newParams;
             default:
-            break;
+                return '/';
         }
     }
+    //性別セレクト
     const selectQueryGender = (event, path, index) => {
-        setSelectedGender(index);
         let locationSearch = window.location.search;
+        const params = locationSearch.substring(1).split('&');
+        const newParams = params.filter(param => param.match(/category=(.*?)(&|$)|price=(.*?)(&|$)/));
         if(selectedGender === index){
+            setSelectedGender(0);
+            const resetpath = resetParams(newParams);
+            dispatch(push(resetpath))
         }else{
+            setSelectedGender(index);
             if(locationSearch !== ""){
-                const params = locationSearch.substring(1).split('&');
-                const newParams = params.filter(param => param.match(/category=(.*?)(&|$)|price=(.*?)(&|$)/))
                 const addpath = (index !== 0) ? setParams(path,newParams) : resetParams(newParams);
                 dispatch(push(addpath)) //menu.value
             } else {
@@ -125,32 +129,36 @@ const ClosableDrawer = (props) => {
             }
         }
     }
-    const selectQueryCategory = (event, path, index) => {
-        setSelectedCategory(index);
+    //カテゴリーセレクト
+    const selectQueryCategory = (event, path, index, currentIndex) => {
         let locationSearch = window.location.search;
-        if(selectedGender === index){
+        const params = locationSearch.substring(1).split('&');
+        const newParams = params.filter(param => param.match(/gender=(.*?)(&|$)|price=(.*?)(&|$)/));
+        if(currentIndex === index){
+            setSelectedCategory(0)
+            const resetpath = resetParams(newParams);
+            dispatch(push(resetpath))
         }else{
+            setSelectedCategory(index);
             if(locationSearch !== ""){
-                const params = locationSearch.substring(1).split('&');
-                const newParams = params.filter(param => param.match(/gender=(.*?)(&|$)|price=(.*?)(&|$)/))
                 const addpath = (index !== 0) ? setParams(path,newParams) : resetParams(newParams);
                 dispatch(push(addpath)) //menu.value
             } else {
-                const addpath = index !== 0 ? path : '/';
-                dispatch(push(addpath)) //menu.value
+                dispatch(push(path)) //menu.value
             }
         }
     }
+    //金額範囲指定
     const selectRangePrice = (event, selecterPrice) => {
         let locationSearch = window.location.search;
-        setPrevState(selecterPrice);
-        console.log(prevState)
-        if(prevState === selecterPrice){
-        console.log(prevState)
+        const params = locationSearch.substring(1).split('&');
+        const newParams = params.filter(param => param.match(/gender=(.*?)(&|$)|category=(.*?)(&|$)/));
+        if(selecterPrice === ''){
+            setPrice([0,50000])
+            const resetpath = resetParams(newParams);
+            dispatch(push(resetpath))
         }else{
             if(locationSearch !== ""){
-                const params = locationSearch.substring(1).split('&');
-                const newParams = params.filter(param => param.match(/gender=(.*?)(&|$)|category=(.*?)(&|$)/))
                 const addpath = setParams(selecterPrice,newParams);
                 dispatch(push(addpath)) //menu.value
             } else {
@@ -162,20 +170,20 @@ const ClosableDrawer = (props) => {
 
     //priceSliderの処理
     function valuetext(price) {
-    return `¥${price}`;
+        return `¥${price}`;
     }
     const handleSlider = (event, newValue) => {
         setPrice(newValue);
     };
     const marks = [
-    {
-        value: 0,
-        label: '¥0',
-    },
-    {
-        value: 50000,
-        label: '¥50000',
-    },
+        {
+            value: 0,
+            label: '¥0',
+        },
+        {
+            value: 50000,
+            label: '¥50000',
+        },
     ];
 
     const selectMenu = (event, path) => {
@@ -294,7 +302,7 @@ const ClosableDrawer = (props) => {
                         <ListItem
                             button
                             key={filter.id}
-                            onClick={(e) => filter.func(e, filter.value, index)}
+                            onClick={(e) => filter.func(e, filter.value, index, selectedCategory)}
                             selected={selectedCategory === index}
                             >
                             <ListItemText primary={filter.label} />
@@ -314,7 +322,10 @@ const ClosableDrawer = (props) => {
                             max={50000}
                             min={0}
                         />
-                        <button onClick={e => selectRangePrice(e,'/?price='+ price)}>確定</button>
+                        <div className='abreastContents'>
+                            <Button disableElevation variant="contained" color="primary" onClick={e => selectRangePrice(e,'/?price='+ price)}>OK</Button>
+                            <Button disableElevation variant="contained" onClick={e => selectRangePrice(e,'')}>リセット</Button>
+                        </div>
                     </div>
                 </List>
             </div>
