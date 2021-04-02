@@ -55,7 +55,7 @@ const ProductDetail = () => {
     const uid = getUserId(selector)
     const path = selector.router.location.pathname; //reduxのstoreで管理しているルーティングのパスの中。
     const URLparam = window.location.search;
-    const id = path.split('/product/')[1];
+    const id = path.slice(0,-1).split('/product/')[1];
     const [product, setProduct] = useState(null);
     const [sellerName,setSellerName] = useState("");
     const [myItem,setMyItem] = useState(false);
@@ -82,7 +82,6 @@ const ProductDetail = () => {
 
     const addProduct = useCallback((selectedSize) => {
         const timeStamp = FirebaseTimestamp.now();
-        console.log(sellerName)
         dispatch(addProductToCart({
             added_at: timeStamp,
             desctiption: product.description,

@@ -256,6 +256,21 @@ export const signIn = (email, password) => {
 
                             dispatch(push('/'))
                         })
+                        .catch(function(error) {
+                        // Handle Errors here.
+                            var errorCode = error.code;
+                            var errorMessage = error.message;
+                            switch (errorCode) {
+                                case 'auth/wrong-password':
+                                alert('パスワードが間違っています。');
+                                break;
+                                case 'auth/user-not-found':
+                                alert('指定された電子メールに対応するユーザーがいません。');
+                                break;
+                                default:
+                                alert(errorMessage);
+                            }
+                        });
                 }
             })
     }
@@ -304,6 +319,8 @@ export const signOut = () => {
             .then(()=>{
                 dispatch(signOutAction());
                 dispatch(push('/signin'));
-            })
+            }).catch((error) => {
+                alert(error.message);
+            });
     }
 }

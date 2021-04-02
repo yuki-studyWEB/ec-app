@@ -83,7 +83,6 @@ const ChangeUserBaseData = () => {
             address2: document.getElementById('address2').value,
             address3: document.getElementById('address3').value
         });
-        console.log(userData)
     };
 
     const inputPassword = useCallback((event) => {

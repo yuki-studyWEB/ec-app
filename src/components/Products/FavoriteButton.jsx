@@ -14,13 +14,12 @@ const FavoriteButton = (props) => {
     const favorites = getFavoriteProducts(selector)
     const checkFavo = favorites.filter(favorite => favorite.productId === props.id)
     const[checked, setChecked] = useState(false);
-
     useEffect(() =>{
         if(checkFavo.length !== 0){
             setChecked(true)
         } else {
             setChecked(false)}
-    })
+    },[checkFavo])
 
     const handleChange = (event) => {
         if(checked !== true){

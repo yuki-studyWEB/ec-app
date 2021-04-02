@@ -213,18 +213,18 @@ const ClosableDrawer = (props) => {
         {func: selectMenu, label:"お気に入り",   icon:<FavoriteBorderIcon />,id: "favorites",  value: "/favorites"}
     ]
 
-    useEffect(() =>{
-        db.collection('categories')
-            .orderBy('order','asc')
-            .get()
-            .then(snapshots =>{
-                const list = [];
-                snapshots.forEach(snapshot => {
-                    const category = snapshot.data()
-                    list.push({func: selectQueryCategory, label: category.name, id: category.id, value: `/?category=${category.id}`})
+    useEffect(async() =>{
+        await db.collection('categories')
+                .orderBy('order','asc')
+                .get()
+                .then(snapshots =>{
+                    const list = [];
+                    snapshots.forEach(snapshot => {
+                        const category = snapshot.data()
+                        list.push({func: selectQueryCategory, label: category.name, id: category.id, value: `/?category=${category.id}`})
+                    })
+                    setFilters(prevState => [...prevState, ...list])
                 })
-                setFilters(prevState => [...prevState, ...list])
-            })
     },[])
 
     return (

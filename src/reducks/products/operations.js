@@ -99,7 +99,6 @@ export const orderProduct = (productsInCart, amount) =>{
                         updated_at: timestamp
                     }
                     orderRef.set(history)
-                    console.log("OK");
                     
                     dispatch(push('/'))
                 }).catch(() =>{
@@ -195,7 +194,6 @@ export const fetchProducts = (gender, category, price, hash) => {
 export const saveProduct = (id,name,description,category,gender,price,images, keyword, sizes) => {
     return async (dispatch, getState) => {
         //バリデーション
-        console.log(sizes)
         if (name === "" || description==="" || category==="" || gender==="" || price===""){
             alert("必須項目が未入力です")
             return false
@@ -222,23 +220,21 @@ export const saveProduct = (id,name,description,category,gender,price,images, ke
             keyword: keyword
         }
         if(id === ""){
-         //既存商品の編集の場合、ここを実行すると再度ドキュメントidが新しく作られてしまうため条件分岐させる。
-        const ref = productsRef.doc();
-        id = ref.id
-        data.id = id //dataに自動采配されたid項目を追加
-        data.created_at = timestamp //dataに新規作成したサーバー時刻を追加
+            //既存商品の編集の場合、ここを実行すると再度ドキュメントidが新しく作られてしまうため条件分岐させる。
+            const ref = productsRef.doc();
+            id = ref.id
+            data.id = id //dataに自動采配されたid項目を追加
+            data.created_at = timestamp //dataに新規作成したサーバー時刻を追加
         } else {
             //algolia、オブジェクトの更新
             data.objectID = id;
-            index.saveObject(data)    
-            .then(() => {
-                console.log('Firebase object indexed in Algolia', data.objectID);
-                delete data.objectID;
-            })
-            .catch(error => {
-                console.error('Error when indexing contact into Algolia', error);
-                process.exit(1);
-            });
+            await index.saveObject(data)    
+                .then(() => {
+                    delete data.objectID; //firebaseDBでは不要なフィールドのため消す
+                })
+                .catch(error => {
+                    process.exit(1);
+                });
         }
         return productsRef.doc(id).set(data, {merge: true}) //{merge: true}更新された部分だけを更新
             .then(() =>{

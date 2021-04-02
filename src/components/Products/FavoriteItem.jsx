@@ -79,7 +79,6 @@ const FavoriteItem = (props) => {
     },[favorite])
 
     const removeFavoriteItem = (id) => {
-        console.log(props.favorite)
         return db.collection('users').doc(uid)
                  .collection('favorites').doc(id)
                  .delete()
