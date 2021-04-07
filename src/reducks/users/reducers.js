@@ -6,40 +6,45 @@ import initialState from '../store/initialState'
 export const UsersReducer = (state = initialState.users, action) => {
     switch (action.type) {
         case Actions.FETCH_ORDERS_HISTORY:
-            return{
+            return {
                 ...state,
-                orders:[...action.payload]
+                orders: [...action.payload]
             }
         case Actions.FETCH_FAVORITE_PRODUCTS:
-            return{
+            return {
                 ...state,
-                favorites:[...action.payload]
+                favorites: [...action.payload]
             }
         case Actions.FETCH_PRODUCTS_IN_CART:
-            return{
+            return {
                 ...state,
-                cart:[...action.payload]
+                cart: [...action.payload]
+            }
+        case Actions.RESET_PRODUCTS_IN_CART:
+            return {
+                ...state,
+                cart: action.payload
             }
         case Actions.CHANGE_USER_DATA:
-            return{
+            return {
                 ...state,
                 ...action.payload
             }
         case Actions.SIGN_IN:
-            return{
+            return {
                 ...state,
                 ...action.payload //isSingnedIn:action.payload.isSignedIn,uid: action.payload.uid,username: action.payload.usernameをまとめてあげれる。
             }
-            //reducersはstoreの状態を上書きしてしまう。指定されていないフィールドがあった場合そのフィールドは無くなってしまう。
-            //これを解決するため、...stateを書いてあげることで、状態を維持することができる。
-            // {...A,...B}でAとBのオブジェクトをマージすることができる！
+        //reducersはstoreの状態を上書きしてしまう。指定されていないフィールドがあった場合そのフィールドは無くなってしまう。
+        //これを解決するため、...stateを書いてあげることで、状態を維持することができる。
+        // {...A,...B}でAとBのオブジェクトをマージすることができる！
         case Actions.SIGN_OUT:
-            return{
+            return {
                 ...state,
                 ...action.payload
             }
-            
+
         default:
             return state
-    }// つまり初期化時は↑のdefaultの箇所が返される。
+    } // つまり初期化時は↑のdefaultの箇所が返される。
 }

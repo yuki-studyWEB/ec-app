@@ -1,26 +1,32 @@
-import React from 'react';
+import React from 'react'
 import Button from '@material-ui/core/Button'
-import {makeStyles} from "@material-ui/styles";
+import { makeStyles } from '@material-ui/styles'
 
-const useStyles = makeStyles({
-    button:{
-        backgroundColor: "#4dd0e1",
-        color: "#333",
-        fontSie: 16,
+const useStyles = makeStyles((theme) => ({
+    button: {
+        backgroundColor: theme.palette.grey['200'],
+        color: '#333',
+        fontWeight: 400,
+        fontSize: 16,
         height: 48,
-        marginTop:16,
-        width:145,
+        marginTop: 16,
+        width: 125,
         '&:hover': {
-            backgroundColor: "#45bbcb",
+            backgroundColor: theme.palette.grey['300']
         }
     }
-})
+}))
 
 const TableButton = (props) => {
-    const classes = useStyles();
+    const classes = useStyles()
 
-    return(
-        <Button className={classes.button} variant="contained" onClick={() => props.onClick()} disabled={props.disabled}> 
+    return (
+        <Button
+            className={classes.button}
+            variant="contained"
+            onClick={() => props.onClick()}
+            disabled={props.disabled}
+        >
             {props.label}
         </Button>
     )

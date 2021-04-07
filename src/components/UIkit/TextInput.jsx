@@ -1,8 +1,8 @@
-import React from 'react';
-import TextField from "@material-ui/core/TextField";
+import React from 'react'
+import TextField from '@material-ui/core/TextField'
 
 const TextInput = (props) => {
-    return(
+    return (
         <TextField
             InputLabelProps={props.InputLabelProps}
             fullWidth={props.fullWidth} //boolean型を受け取る。true幅マックス、false適切な幅

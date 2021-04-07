@@ -1,6 +1,6 @@
 const initialState = {
-    products:{
-        list:[],
+    products: {
+        list: [],
         searchResult: []
     },
     users: {
@@ -8,16 +8,16 @@ const initialState = {
         favorites: [],
         isSignedIn: false,
         orders: [],
-        role: "",
-        uid: "",
-        email: "",
-        username: "",
-        fullName: "",
-        fullNameKana: "",
-        fullPostCode: "",
-        fulladdress: "",
-        tel: ""
+        role: '',
+        uid: '',
+        email: '',
+        username: '',
+        fullName: '',
+        fullNameKana: '',
+        fullPostCode: '',
+        fulladdress: '',
+        tel: ''
     }
-}; //initialStateではアプリに必要なstateを全て記述しておくこと。
+} //initialStateではアプリに必要なstateを全て記述しておくこと。
 
 export default initialState

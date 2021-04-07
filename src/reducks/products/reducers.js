@@ -6,30 +6,30 @@ import initialState from '../store/initialState'
 export const ProductsReducer = (state = initialState.products, action) => {
     switch (action.type) {
         case Actions.DELETE_PRODUCT:
-            return{
+            return {
                 ...state,
                 list: [...action.payload]
-            };
+            }
         case Actions.SEARCH_RESULT:
-            state.searchResult = [];
-            return{
+            state.searchResult = []
+            return {
                 ...state,
                 searchResult: [...action.payload]
-            };
+            }
         case Actions.FETCH_PRODUCTS:
-            state.list = [];
-            if(state.list.length === 0){
-                return{
+            state.list = []
+            if (state.list.length === 0) {
+                return {
                     ...state,
                     list: action.payload
-                };
+                }
             }
-            case Actions.RESET_SEARCH:
-            return{
+        case Actions.RESET_SEARCH:
+            return {
                 ...state,
                 searchResult: action.payload
-            };
-            default:
+            }
+        default:
             return state
     }
 }

@@ -1,19 +1,18 @@
-import React,{useState, useCallback} from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import {Card, CardContent, CardMedia, Typography, IconButton, Menu, MenuItem} from '@material-ui/core';
+import React, { useState, useCallback } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+import { Card, CardContent, CardMedia, Typography, IconButton, Menu, MenuItem } from '@material-ui/core'
 import NoImage from '../../assets/img/src/no_image.png'
-import {push} from 'connected-react-router';
-import {useDispatch, useSelector} from 'react-redux';
-import MOreVertIcon from '@material-ui/icons/MoreVert';
-import {deleteProduct} from "../../reducks/products/operations";
-import {getUserId} from "../../reducks/users/selectors";
-import {FavoriteButtonInCard} from "./index";
-
+import { push } from 'connected-react-router'
+import { useDispatch, useSelector } from 'react-redux'
+import MOreVertIcon from '@material-ui/icons/MoreVert'
+import { deleteProduct } from '../../reducks/products/operations'
+import { getUserId } from '../../reducks/users/selectors'
+import { FavoriteButtonInCard } from './index'
 
 //themeを使うことでブレイクポイントや配色の設定が可能
-const useStyles = makeStyles ((theme) => ({
+const useStyles = makeStyles((theme) => ({
     root: {
-        boxSizing: "border-box",
+        boxSizing: 'border-box',
         [theme.breakpoints.down('sm')]: {
             margin: '8px auto',
             width: 'calc(50% - 10px)',
@@ -52,10 +51,10 @@ const useStyles = makeStyles ((theme) => ({
             position: 'absolute',
             content: '""',
             display: 'block',
-            transition: "150ms ease"
+            transition: '150ms ease'
         },
         '&:hover::before': {
-            backgroundColor: "rgba(250,250,250,0.3)"
+            backgroundColor: 'rgba(250,250,250,0.3)'
         }
     },
     itemName: {
@@ -65,7 +64,7 @@ const useStyles = makeStyles ((theme) => ({
         overflow: 'hidden',
         [theme.breakpoints.down('sm')]: {
             height: '72%',
-            fontSize: 12.5,
+            fontSize: 12.5
         },
         [theme.breakpoints.up('sm')]: {
             height: 52.5,
@@ -86,27 +85,30 @@ const useStyles = makeStyles ((theme) => ({
     favorite: {
         marginRight: 0
     }
-}));
+}))
 
 const ProductCard = (props) => {
-    const classes = useStyles();
-    const dispatch = useDispatch();
-    const selector = useSelector((state) =>state);
-    const uid = getUserId(selector);
+    const classes = useStyles()
+    const dispatch = useDispatch()
+    const selector = useSelector((state) => state)
+    const uid = getUserId(selector)
 
-    const [anchorEl, setAnchorEl] = useState(null);
+    const [anchorEl, setAnchorEl] = useState(null)
 
-    const handleClick = useCallback((event) => {
-        setAnchorEl(event.currentTarget)
-    },[setAnchorEl]);
+    const handleClick = useCallback(
+        (event) => {
+            setAnchorEl(event.currentTarget)
+        },
+        [setAnchorEl]
+    )
     const handleClose = () => {
         setAnchorEl(null)
-    };
+    }
 
-    const images = (props.images.length > 0) ? props.images : [{path: NoImage}];
-    const price = props.price.toLocaleString(); //三桁区切りの文字列を返す。
+    const images = props.images.length > 0 ? props.images : [{ path: NoImage }]
+    const price = props.price.toLocaleString() //三桁区切りの文字列を返す。
 
-    return(
+    return (
         <Card className={classes.root}>
             <CardMedia
                 className={classes.media}
@@ -116,10 +118,7 @@ const ProductCard = (props) => {
             />
             <CardContent className={classes.content}>
                 <div className={classes.contentText}>
-                    <Typography 
-                        className={classes.itemName}
-                        component="p"
-                    >
+                    <Typography className={classes.itemName} component="p">
                         {props.name}
                     </Typography>
                     <Typography className={classes.price} component="p">
@@ -127,45 +126,43 @@ const ProductCard = (props) => {
                     </Typography>
                 </div>
                 {props.creatorId === uid ? ( //商品の作者が一致していれば編集削除可能
-                <div>
-                    <IconButton className={classes.morevert} onClick={handleClick}>
-                        <MOreVertIcon />
-                    </IconButton>
-                    <Menu
-                        anchorEl={anchorEl}
-                        keepMounted
-                        open={Boolean(anchorEl)}
-                        onClose={handleClose}
-                    >
-                        <MenuItem
-                            onClick={() => {
-                                dispatch(push('/edit/' + props.id + '/?' + props.URLparam))
-                                handleClose()
-                            }}
-                        >
-                            編集する
-                        </MenuItem>
-                        <MenuItem
-                            onClick={() =>{
-                                dispatch(deleteProduct(props.id))
-                                handleClose()
-                            }}
-                        >
-                            削除する
-                        </MenuItem>
-                    </Menu>
-                </div>
+                    <div>
+                        <IconButton className={classes.morevert} onClick={handleClick}>
+                            <MOreVertIcon />
+                        </IconButton>
+                        <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
+                            <MenuItem
+                                onClick={() => {
+                                    dispatch(push('/edit/' + props.id + '/?' + props.URLparam))
+                                    handleClose()
+                                }}
+                            >
+                                編集する
+                            </MenuItem>
+                            <MenuItem
+                                onClick={() => {
+                                    dispatch(deleteProduct(props.id))
+                                    handleClose()
+                                }}
+                            >
+                                削除する
+                            </MenuItem>
+                        </Menu>
+                    </div>
                 ) : (
-                <div>
-                    <FavoriteButtonInCard 
-                        id={props.id} images={props.images}
-                        name={props.name} price={props.price} sellerName={props.sellerName}
-                    />
-                </div>
+                    <div>
+                        <FavoriteButtonInCard
+                            id={props.id}
+                            images={props.images}
+                            name={props.name}
+                            price={props.price}
+                            sellerName={props.sellerName}
+                        />
+                    </div>
                 )}
             </CardContent>
         </Card>
     )
 }
 
-export default ProductCard;
+export default ProductCard

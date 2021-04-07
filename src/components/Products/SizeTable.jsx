@@ -1,8 +1,7 @@
-import React from 'react';
-import {IconButton, Table, TableBody, TableCell, TableContainer, TableRow} from "@material-ui/core";
-import {makeStyles} from "@material-ui/styles";
-import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
-
+import React from 'react'
+import { IconButton, Table, TableBody, TableCell, TableContainer, TableRow } from '@material-ui/core'
+import { makeStyles } from '@material-ui/styles'
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 
 const useStyles = makeStyles({
     iconCell: {
@@ -10,28 +9,25 @@ const useStyles = makeStyles({
         height: 48,
         width: 48
     }
-});
+})
 
 const SizeTable = (props) => {
-    const classes = useStyles();
-    const sizes = props.sizes;
-
+    const classes = useStyles()
+    const sizes = props.sizes
 
     return (
         <TableContainer>
             <Table>
                 <TableBody>
-                    {sizes.length > 0 &&(
-                        sizes.map((item,index) =>(
+                    {sizes.length > 0 &&
+                        sizes.map((item, index) => (
                             <TableRow key={item.size}>
                                 <TableCell component="th" scope="row">
                                     {item.size}
                                 </TableCell>
-                                <TableCell>
-                                    残り{item.quantity}点
-                                </TableCell>
-                                <TableCell　className={classes.iconCell}>
-                                    {item.quantity > 0 ?(
+                                <TableCell>残り{item.quantity}点</TableCell>
+                                <TableCell className={classes.iconCell}>
+                                    {item.quantity > 0 ? (
                                         <IconButton disabled={props.myItem} onClick={() => props.addProduct(item.size)}>
                                             <ShoppingCartIcon />
                                         </IconButton>
@@ -40,8 +36,7 @@ const SizeTable = (props) => {
                                     )}
                                 </TableCell>
                             </TableRow>
-                        ))
-                    )}
+                        ))}
                 </TableBody>
             </Table>
         </TableContainer>

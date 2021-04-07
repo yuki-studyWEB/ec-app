@@ -1,5 +1,5 @@
-import React from 'react';
-import {makeStyles} from '@material-ui/styles';
+import React from 'react'
+import { makeStyles } from '@material-ui/styles'
 
 const useStyles = makeStyles({
     row: {
@@ -19,16 +19,12 @@ const useStyles = makeStyles({
 })
 
 const TextDetail = (props) => {
-    const classes = useStyles();
+    const classes = useStyles()
 
-    return(
+    return (
         <div className={classes.row}>
-            <div className={classes.label}>
-                {props.label}
-            </div>
-            <div className={classes.value}>
-                {props.value}
-            </div>
+            <div className={classes.label}>{props.label}</div>
+            <div className={classes.value}>{props.value}</div>
         </div>
     )
 }
